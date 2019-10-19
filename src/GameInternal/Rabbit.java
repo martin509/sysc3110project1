@@ -14,7 +14,6 @@ public class Rabbit extends MovablePiece{
     
     public Rabbit(String ID){
     	super(ID);
-
     }
     
     public boolean getInHole(){
