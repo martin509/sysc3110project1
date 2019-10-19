@@ -15,4 +15,7 @@ abstract class GamePiece{
     public abstract boolean canBeJumped();
     public abstract String getID();
     public boolean canBeMoved() {return movable; }
+    public GamePiece(String ID) {
+    	this.ID = ID;
+    }
 }

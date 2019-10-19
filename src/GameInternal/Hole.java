@@ -12,7 +12,7 @@ package GameInternal;
 class Hole extends ContainerPiece{
    
     public Hole(String ID){
-        this.ID = ID;
+    	super(ID);
     }
     @Override
     public boolean enter(GamePiece piece){

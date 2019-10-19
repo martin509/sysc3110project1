@@ -12,7 +12,7 @@ package GameInternal;
 class Mushroom extends GamePiece{
     
     public Mushroom(String ID){
-        this.ID = ID;
+        super(ID);
     }
     
     @Override

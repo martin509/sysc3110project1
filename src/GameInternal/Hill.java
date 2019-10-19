@@ -12,8 +12,7 @@ package GameInternal;
 class Hill extends ContainerPiece{
     
     public Hill(String ID){
-        super();
-        this.ID = ID;
+        super(ID);
     }
     
     @Override

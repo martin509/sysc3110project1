@@ -12,4 +12,7 @@ package GameInternal;
 abstract class ContainerPiece extends GamePiece {
     protected GamePiece contains;
     public abstract boolean enter(GamePiece piece);
+    ContainerPiece(String ID){
+    	super(ID);
+    }
 }

@@ -15,8 +15,7 @@ class Fox extends MovablePiece{
     
     
     public Fox(String ID, int length, DIRECTION axis){
-    	super();
-        this.ID = ID;
+    	super(ID);
         this.axis = axis;
         if(length > 0){
             head = new FoxBit(this, this.getID() + "_bit0");
