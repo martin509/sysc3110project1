@@ -5,29 +5,28 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class PieceTest {
+	Fox fox1 = new Fox("Fox1", 1, DIRECTION.NORTH_SOUTH);
+	Hill hill1 = new Hill("Hill1");
+	Hole hole1 = new Hole("Hole1");
+	Mushroom mush1 = new Mushroom("Mush1");
+	Rabbit rabb1 = new Rabbit("Bun1"); 
 	
-	GamePiece[] createPieces() {
-		GamePiece[] pieces = new GamePiece[5];
-		pieces[0] = new Fox("Fox1", 1, DIRECTION.NORTH_SOUTH);
-		pieces[1] = new Hill("Hill1");
-		pieces[2] = new Hole("Hole1");
-		pieces[3] = new Mushroom("Mush1");
-		pieces[4] = new Rabbit("Bun1"); 
-		return pieces;
-	}
 	@Test
 	void testMovable() {
-		boolean[] results = {true, false, false, false, true};
-		GamePiece[] pieces = createPieces();
+		boolean[] results = {false, false, false};
+		GamePiece[] pieces = {hill1, hole1, mush1};
 		String errorMsg;
 		for(int n = 0; n < pieces.length; n++) {
 			errorMsg = "Piece " + pieces[n].getID() + "'s movable value should be " + results[n];
-			assertEquals(results[n], pieces[n].canBeMoved() ,errorMsg);
+			assertEquals(results[n], pieces[n].canBeMoved(), errorMsg);
 		}
-		Fox fox2 = new Fox("Fox2", 1, DIRECTION.NORTH_SOUTH);
-		assertEquals(true, fox2.getHead().canBeMoved(), "Fox2's head should be movable.");
-		//pass();
-		//fail("Not yet implemented");
+		assertEquals(true, fox1.canBeMoved(), "Fox1's head should be movable.");
+		assertEquals(true, fox1.getHead().canBeMoved(), "Fox1's head should be movable.");
+		assertEquals(true, rabb1.canBeMoved(), "Rabb1 should be movable at first.");
+		rabb1.jumpInHole();
+		assertEquals(false, rabb1.canBeMoved(), "Rabb1 should not be able to be moved after being put in a hole.");
+		
 	}
+	
 
 }
