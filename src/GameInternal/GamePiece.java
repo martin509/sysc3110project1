@@ -11,7 +11,7 @@ package GameInternal;
  */
 abstract class GamePiece{
     protected String ID;
-    protected boolean movable;
+    protected boolean movable = false;
     public abstract boolean canBeJumped();
     public abstract String getID();
     public boolean canBeMoved() {return movable; }
