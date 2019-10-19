@@ -24,6 +24,8 @@ class PieceTest {
 			errorMsg = "Piece " + pieces[n].getID() + "'s movable value should be " + results[n];
 			assertEquals(results[n], pieces[n].canBeMoved() ,errorMsg);
 		}
+		Fox fox2 = new Fox("Fox2", 1, DIRECTION.NORTH_SOUTH);
+		assertEquals(true, fox2.getHead().canBeMoved(), "Fox2's head should be movable.");
 		//pass();
 		//fail("Not yet implemented");
 	}
