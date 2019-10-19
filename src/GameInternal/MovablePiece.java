@@ -10,8 +10,8 @@ package GameInternal;
  * @author jweho
  */
 abstract class MovablePiece extends GamePiece{
-	//protected boolean movable = true;
 	protected MovablePiece() {
 		movable = true;
 	}
+	
 }
