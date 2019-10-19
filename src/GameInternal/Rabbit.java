@@ -23,6 +23,7 @@ public class Rabbit extends MovablePiece{
     
     public void jumpInHole(){
         inHole = true;
+        this.movable = false;
     }
     
     @Override
