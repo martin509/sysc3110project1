@@ -13,8 +13,8 @@ public class Rabbit extends MovablePiece{
     private boolean inHole = false;
     
     public Rabbit(String ID){
-    	super();
-        this.ID = ID;
+    	super(ID);
+
     }
     
     public boolean getInHole(){
