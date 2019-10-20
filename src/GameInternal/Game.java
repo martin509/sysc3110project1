@@ -63,7 +63,7 @@ public class Game {
 	 * @param piece the type of piece the ID is being made for.
 	 * @return something like "FOX 1" or whatever
 	 */
-	private String genNewID(PieceType piece) {
+	public String genNewID(PieceType piece) {
 		String out = "";
 		switch(piece) {
 		case FOX_EW: case FOX_NS:
@@ -81,6 +81,19 @@ public class Game {
 		case MUSHROOM:
 			out += "MUSH";
 			break;
+		}
+		boolean foundID = false;
+		int IDCounter = 1;
+		String outBuffer = out + IDCounter;
+		while(!foundID) {
+			if(idList.contains(outBuffer)) {
+				out = outBuffer;
+				idList.add(out);
+				foundID = true;
+			}else {
+				IDCounter++;
+				outBuffer = out + IDCounter;
+			}
 		}
 		return out;
 	}
