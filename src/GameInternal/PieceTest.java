@@ -27,6 +27,14 @@ class PieceTest {
 		assertEquals(false, rabb1.canBeMoved(), "Rabb1 should not be able to be moved after being put in a hole.");
 		
 	}
+	@Test
+	void testGameConstructor() {
+		Game game1 = new Game(5, 5);
+		assertEquals("FOX1", game1.genNewID(PieceType.FOX_EW),"First Fox should be FOX1");
+		assertEquals("FOX2", game1.genNewID(PieceType.FOX_EW),"2nd Fox should be FOX2");
+		assertEquals("FOX3", game1.genNewID(PieceType.FOX_NS),"3rd Fox should be FOX3");
+		assertEquals("RABBIT1", game1.genNewID(PieceType.RABBIT),"1st Rabbit should be RABBIT1");
+	}
 	
 
 }
