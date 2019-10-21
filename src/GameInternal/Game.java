@@ -230,17 +230,17 @@ public class Game {
 	public boolean addPiece(int x, int y, PieceType piece) {
 		switch(piece) {
 		case FOX_EW:
-			return addPiece(x, y, new Fox(genNewID(piece), 1, DIRECTION.EAST_WEST));
+			return addPiece(x, y, new Fox(genNewID(piece), x, y, 1, DIRECTION.EAST_WEST));
 		case FOX_NS:
-			return addPiece(x, y, new Fox(genNewID(piece), 1, DIRECTION.NORTH_SOUTH));
+			return addPiece(x, y, new Fox(genNewID(piece), x, y, 1, DIRECTION.NORTH_SOUTH));
 		case RABBIT:
-			return addPiece(x, y, new Rabbit(genNewID(piece)));
+			return addPiece(x, y, new Rabbit(genNewID(piece), x, y));
 		case HILL:
-			return addPiece(x, y, new Hill(genNewID(piece)));
+			return addPiece(x, y, new Hill(genNewID(piece), x, y));
 		case HOLE:
-			return addPiece(x, y, new Hole(genNewID(piece)));
+			return addPiece(x, y, new Hole(genNewID(piece), x, y));
 		default:
-			return addPiece(x, y, new Mushroom(genNewID(piece)));
+			return addPiece(x, y, new Mushroom(genNewID(piece), x, y));
 		}
 	}
 	
