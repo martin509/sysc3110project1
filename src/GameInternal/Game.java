@@ -15,24 +15,6 @@ public class Game {
 		return board[x][y];
 	}
 	
-	/**
-	 * Helper method for addPiece.
-	 * @param x
-	 * @param y
-	 * @param piece
-	 * @return whether or not it succeeded.
-	 */
-	private boolean addPiece(int x, int y, GamePiece piece) {
-		if(x >= boardWidth || y >= boardHeight) {
-			return false;
-		}
-		if(board[x][y] == null) {
-			board[x][y] = piece;
-			return true;
-		}else {
-			return false;
-		}
-	}
 	
 	/**
      * Checks to see if you can move a piece to a desired location
@@ -261,6 +243,26 @@ public class Game {
 			return addPiece(x, y, new Mushroom(genNewID(piece), x, y));
 		}
 	}
+	
+	/**
+	 * Helper method for addPiece.
+	 * @param x
+	 * @param y
+	 * @param piece
+	 * @return whether or not it succeeded.
+	 */
+	private boolean addPiece(int x, int y, GamePiece piece) {
+		if(x >= boardWidth || y >= boardHeight) {
+			return false;
+		}
+		if(board[x][y] == null) {
+			board[x][y] = piece;
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
 	
 	public void getPiecesOfType(PieceType piece) {
 		switch(piece) {
