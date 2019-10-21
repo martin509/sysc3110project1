@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class PieceTest {
+class Test_Pieces {
 	Fox fox1 = new Fox("Fox1", 1, DIRECTION.NORTH_SOUTH);
 	Hill hill1 = new Hill("Hill1");
 	Hole hole1 = new Hole("Hole1");
@@ -27,6 +27,4 @@ class PieceTest {
 		assertEquals(false, rabb1.canBeMoved(), "Rabb1 should not be able to be moved after being put in a hole.");
 		
 	}
-	
-
 }

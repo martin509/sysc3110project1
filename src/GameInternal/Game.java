@@ -16,7 +16,7 @@ public class Game {
 	}
 	
 	/**
-	 * This is private because why trust anything but Game to make GamePieces?
+	 * Helper method for addPiece.
 	 * @param x
 	 * @param y
 	 * @param piece
@@ -55,32 +55,73 @@ public class Game {
 			return addPiece(x, y, new Hole(genNewID(piece)));
 		default:
 			return addPiece(x, y, new Mushroom(genNewID(piece)));
-			
 		}
 	}
+	
+	public void getPiecesOfType(PieceType piece) {
+		switch(piece) {
+		case FOX_EW: case FOX_NS:
+			
+		case RABBIT:
+			
+		case HILL:
+			
+		case HOLE:
+			
+		default:
+			
+		}
+		for(int x = 0; x < boardWidth; x++) {
+			for(int y = 0; y < boardHeight; y++) {
+				
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public void getBoard() {
+		
+	}
+	
 	/**
 	 * Generates a new ID for a given Piece that hasn't been taken.
 	 * @param piece the type of piece the ID is being made for.
 	 * @return something like "FOX 1" or whatever
 	 */
-	private String genNewID(PieceType piece) {
+	public String genNewID(PieceType piece) {
 		String out = "";
 		switch(piece) {
 		case FOX_EW: case FOX_NS:
-			out += "FOX";
+			out += "Fox ";
 			break;
 		case RABBIT:
-			out += "RABBIT";
+			out += "Rabbit ";
 			break;
 		case HILL:
-			out += "HILL";
+			out += "Hill ";
 			break;
 		case HOLE:
-			out += "HOLE";
+			out += "Hole ";
 			break;
 		case MUSHROOM:
-			out += "MUSH";
+			out += "Mushroom ";
 			break;
+		}
+		boolean foundID = false;
+		int IDCounter = 1;
+		String outBuffer = out + IDCounter;
+		while(!foundID) {
+			if(idList.contains(outBuffer)) {
+				out = outBuffer;
+				idList.add(out);
+				foundID = true;
+			}else {
+				IDCounter++;
+				outBuffer = out + IDCounter;
+			}
 		}
 		return out;
 	}
@@ -96,6 +137,4 @@ public class Game {
 		boardHeight = height;
 		idList = new ArrayList<String>();
 	}
-	
-	
 }
