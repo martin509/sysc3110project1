@@ -10,8 +10,8 @@ package GameInternal;
  * @author jweho
  */
 abstract class MovablePiece extends GamePiece{
-	protected MovablePiece(String ID) {
-		super(ID);
+	protected MovablePiece(String ID, int x, int y) {
+		super(ID, x, y);
 		movable = true;
 	}
 	

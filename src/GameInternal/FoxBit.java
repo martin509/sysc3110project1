@@ -15,8 +15,8 @@ class FoxBit extends GamePiece{
     private FoxBit ahead;
     private FoxBit behind;
 
-    public FoxBit(Fox fox, String ID){
-    	super(ID);
+    public FoxBit(Fox fox, String ID, int x, int y){
+    	super(ID, x, y);
     	this.movable = true;
         partOfFox = fox;
     }

@@ -12,8 +12,8 @@ package GameInternal;
 public class Rabbit extends MovablePiece{
     private boolean inHole = false;
     
-    public Rabbit(String ID){
-    	super(ID);
+    public Rabbit(String ID, int x, int y){
+    	super(ID, x, y);
     }
     
     public boolean getInHole(){
