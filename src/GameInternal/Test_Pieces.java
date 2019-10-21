@@ -5,11 +5,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class Test_Pieces {
-	Fox fox1 = new Fox("Fox1", 1, DIRECTION.NORTH_SOUTH);
-	Hill hill1 = new Hill("Hill1");
-	Hole hole1 = new Hole("Hole1");
-	Mushroom mush1 = new Mushroom("Mush1");
-	Rabbit rabb1 = new Rabbit("Bun1"); 
+	Fox fox1 = new Fox("Fox1", 4, 4, 1, DIRECTION.NORTH_SOUTH);
+	Hill hill1 = new Hill("Hill1", 0, 0);
+	Hole hole1 = new Hole("Hole1", 2, 2);
+	Mushroom mush1 = new Mushroom("Mush1", 1, 1);
+	Rabbit rabb1 = new Rabbit("Bun1", 3, 3); 
 	
 	@Test
 	void testMovable() {
