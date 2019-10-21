@@ -43,7 +43,7 @@ public class Command {
 	/**
 	 * @returns The target itself
 	 */
-	public String getTargetClass(){
+	public GamePiece getTargetClass(){
 		return this.targetPiece;
 	}
 }
