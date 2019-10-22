@@ -15,6 +15,19 @@ public class Game {
 		return board[x][y];
 	}
 	
+	/**
+	 * Checks for a win state in the game.
+	 * @return whether or not all rabbits are in holes. Defaults to true if there are no rabbits.
+	 */
+	public boolean isGameWon() {
+		ArrayList<GamePiece> rabbits = getPiecesOfType(PieceType.RABBIT);
+		for(GamePiece r: rabbits) {
+			if(!((Rabbit)r).isInHole()) {
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	/**
      * Checks to see if you can move a piece to a desired location
