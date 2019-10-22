@@ -15,6 +15,33 @@ public class Game {
 		return board[x][y];
 	}
 	
+	public GamePiece getPiece(String ID) {
+		String type = ID.split(" ")[0];
+		ArrayList<GamePiece> pieces;
+		switch(type) {
+		case "Rabbit":
+			pieces = getPiecesOfType(PieceType.RABBIT);
+		break;
+		case "Fox":
+			pieces = getPiecesOfType(PieceType.FOX_EW);
+		break;
+		case "Hill":
+			pieces = getPiecesOfType(PieceType.HILL);
+			break;
+		case "Hole":
+			pieces = getPiecesOfType(PieceType.HOLE);
+			break;
+		default:
+			pieces = getPiecesOfType(PieceType.MUSHROOM);
+		}
+		for(GamePiece p: pieces) {
+			if(p.getID().contentEquals(ID)) {
+				return p;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Checks for a win state in the game.
 	 * @return whether or not all rabbits are in holes. Defaults to true if there are no rabbits.
