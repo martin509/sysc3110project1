@@ -16,7 +16,6 @@ public class Game {
 	}
 	
 	public GamePiece getPiece(String ID) {
-		
 		String type = ID.split(" ")[0];
 		ArrayList<GamePiece> pieces;
 		switch(type) {
