@@ -28,7 +28,25 @@ public class Test_Game {
 		assertEquals(true, game1.addPiece(2, 3, PieceType.MUSHROOM));
 		assertEquals(3, game1.getPiecesOfType(PieceType.RABBIT).size(), "Should get 3 pieces.");
 	}
-	/*void testAddPieces() {
+	
+	@Test
+	void testGetPiecesByID() {
 		Game game1 = new Game(5, 5);
-	}*/
+		game1.addPiece(1, 0, PieceType.RABBIT);
+		game1.addPiece(1, 1, PieceType.RABBIT);
+		game1.addPiece(2, 2, PieceType.RABBIT);
+		game1.addPiece(2, 3, PieceType.MUSHROOM);
+		assertEquals("Rabbit 2", game1.getPiece("Rabbit 2").getID());
+	}
+	
+	void testIsGameWon() {
+		Game game1 = new Game(5, 5);
+		game1.addPiece(1, 0, PieceType.HILL);
+		game1.addPiece(1, 1, PieceType.HOLE);
+		game1.addPiece(2, 2, PieceType.MUSHROOM);
+		assertEquals(false, game1.isGameWon());
+		game1.addPiece(1, 1, PieceType.RABBIT);
+		assertEquals(true, game1.isGameWon());
+		
+	}
 }

@@ -3,20 +3,16 @@ package GameInternal;
 import java.util.ArrayList;
 
 public class Game {
-	
-	//hoo boy
-	//hoooooooooooooooooooooooooooooooooooooooooooooooo boy
-	//this is gonna take a while isn't it
+
 	private GamePiece[][] board;
 	private int boardWidth, boardHeight;
-	private ArrayList<String> idList; //Gonna want a list of IDs that have already been made, to avoid duplicate keys.
+	private ArrayList<String> idList; //Need a list of IDs that have already been made, to avoid duplicate keys.
 	
 	private GamePiece getObjectAt(int x, int y) {
 		return board[x][y];
 	}
 	
-	public GamePiece getPiece(String ID) {
-		
+	public GamePiece getPiece(String ID) {	
 		String type = ID.split(" ")[0];
 		ArrayList<GamePiece> pieces;
 		switch(type) {
@@ -262,7 +258,7 @@ public class Game {
     }
 	
 	/**
-	 * Not sure how to go about this, but this one is the public-facing addPiece
+	 * The public-facing addPiece.
 	 * @param x
 	 * @param y
 	 * @param piece
@@ -299,6 +295,10 @@ public class Game {
 		if(board[x][y] == null) {
 			board[x][y] = piece;
 			return true;
+		}else if(board[x][y] instanceof Hole && piece instanceof Rabbit) {
+				Hole container = (Hole)board[x][y];
+				container.putIn(piece);
+				return true;
 		}else {
 			return false;
 		}
@@ -329,6 +329,11 @@ public class Game {
 				if(board[x][y] != null) {
 					if(board[x][y].getClass().equals(compared.getClass())) {
 						pieces.add(board[x][y]);
+					}else if(board[x][y] instanceof ContainerPiece) {
+						ContainerPiece cont = (ContainerPiece) board[x][y];
+						if(cont.takeOut().getClass().equals(compared.getClass())) {
+							pieces.add(cont.takeOut());
+						}
 					}
 				}
 			}
@@ -340,8 +345,8 @@ public class Game {
 	 * 
 	 * @return
 	 */
-	public void getBoard() {
-		
+	public GamePiece[][] getBoard() {
+		return board;
 	}
 	
 	/**
