@@ -9,7 +9,7 @@ package GameInternal;
  *
  * @author jweho
  */
-abstract class GamePiece{
+public abstract class GamePiece{
     protected String ID;
     protected boolean movable = false;
     public abstract boolean canBeJumped();
