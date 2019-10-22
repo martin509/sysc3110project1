@@ -252,7 +252,7 @@ public class Game {
 	 * @return whether or not it succeeded.
 	 */
 	private boolean addPiece(int x, int y, GamePiece piece) {
-		if(x >= boardWidth || y >= boardHeight) {
+		if(x >= boardWidth || y >= boardHeight || x < 0 || y < 0) {
 			return false;
 		}
 		if(board[x][y] == null) {
@@ -264,24 +264,35 @@ public class Game {
 	}
 	
 	
-	public void getPiecesOfType(PieceType piece) {
+	public ArrayList<GamePiece> getPiecesOfType(PieceType piece) {
+		GamePiece compared;
+		ArrayList<GamePiece> pieces = new ArrayList<GamePiece>();
 		switch(piece) {
 		case FOX_EW: case FOX_NS:
-			
+			compared = new Fox("", 0, 0, 0, DIRECTION.NORTH_SOUTH);
+			break;
 		case RABBIT:
-			
+			compared = new Rabbit("", 0, 0);
+			break;
 		case HILL:
-			
+			compared = new Hill("", 0, 0);
+			break;
 		case HOLE:
-			
+			compared = new Hole("", 0, 0);
+			break;
 		default:
-			
+			compared = new Mushroom("", 0, 0);
 		}
 		for(int x = 0; x < boardWidth; x++) {
 			for(int y = 0; y < boardHeight; y++) {
-				
+				if(board[x][y] != null) {
+					if(board[x][y].getClass().equals(compared.getClass())) {
+						pieces.add(board[x][y]);
+					}
+				}
 			}
 		}
+		return pieces;
 	}
 
 	/**
@@ -320,7 +331,7 @@ public class Game {
 		int IDCounter = 1;
 		String outBuffer = out + IDCounter;
 		while(!foundID) {
-			if(idList.contains(outBuffer)) {
+			if(!idList.contains(outBuffer)) {
 				out = outBuffer;
 				idList.add(out);
 				foundID = true;
@@ -339,6 +350,11 @@ public class Game {
 	 */
 	public Game(int width, int height) {
 		board = new GamePiece[width][height];
+		for(GamePiece[] x: board) {
+			for(GamePiece y: x) {
+				y = null;
+			}
+		}
 		boardWidth = width;
 		boardHeight = height;
 		idList = new ArrayList<String>();
