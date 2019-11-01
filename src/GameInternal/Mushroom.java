@@ -9,25 +9,25 @@ package GameInternal;
  *
  * @author jweho
  */
-class Mushroom extends GamePiece{
-    
-    public Mushroom(String ID, int x, int y){
-        super(ID, x, y);
-    }
-    
-    @Override
-    public boolean canBeJumped() {
-        return true;
-    }
+public class Mushroom extends GamePiece {
 
-    @Override
-    public String getID() {
-        return this.ID;
-    }
+	public Mushroom(String ID, int x, int y) {
+		super(ID, x, y);
+	}
 
-    @Override
-    public boolean canBeMoved() {
-        return false;
-    }
-    
+	@Override
+	public boolean canBeJumped() {
+		return true;
+	}
+
+	@Override
+	public String getID() {
+		return this.ID;
+	}
+
+	@Override
+	public boolean canBeMoved() {
+		return false;
+	}
+
 }

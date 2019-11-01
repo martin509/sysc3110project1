@@ -9,62 +9,62 @@ package GameInternal;
  *
  * @author jweho
  */
-class FoxBit extends GamePiece{
-	
-    private Fox partOfFox;
-    private FoxBit ahead;
-    private FoxBit behind;
+public class FoxBit extends GamePiece {
 
-    public FoxBit(Fox fox, String ID, int x, int y){
-    	super(ID, x, y);
-    	this.movable = true;
-        partOfFox = fox;
-    }
+	private Fox partOfFox;
+	private FoxBit ahead;
+	private FoxBit behind;
 
-    public void setAhead(FoxBit ahead) {
-        this.ahead = ahead;
-    }
+	public FoxBit(Fox fox, String ID, int x, int y) {
+		super(ID, x, y);
+		this.movable = true;
+		partOfFox = fox;
+	}
 
-    public void setBehind(FoxBit behind) {
-        this.behind = behind;
-    }
-        
-    public Fox getFox() {
-        return partOfFox;
-    }
+	public void setAhead(FoxBit ahead) {
+		this.ahead = ahead;
+	}
 
-    public FoxBit getAhead() {
-        return ahead;
-    }
+	public void setBehind(FoxBit behind) {
+		this.behind = behind;
+	}
 
-    public FoxBit getBehind() {
-        return behind;
-    }
-    
-    public FoxBit getHead(){
-        FoxBit tempHead = this;
-        while(tempHead.getAhead()!=null){
-            tempHead = tempHead.getAhead();
-        }
-        return tempHead;
-    }
-    
-    public FoxBit getTail(){
-        FoxBit tempTail = this;
-        while(tempTail.getBehind()!=null){
-            tempTail = tempTail.getBehind();
-        }
-        return tempTail;
+	public Fox getFox() {
+		return partOfFox;
+	}
 
-    }
+	public FoxBit getAhead() {
+		return ahead;
+	}
 
-    @Override
-    public boolean canBeJumped() {
-        return true;
-    }
+	public FoxBit getBehind() {
+		return behind;
+	}
 
-    @Override
-    public String getID() {
-        return ID;
-    }
+	public FoxBit getHead() {
+		FoxBit tempHead = this;
+		while (tempHead.getAhead() != null) {
+			tempHead = tempHead.getAhead();
+		}
+		return tempHead;
+	}
+
+	public FoxBit getTail() {
+		FoxBit tempTail = this;
+		while (tempTail.getBehind() != null) {
+			tempTail = tempTail.getBehind();
+		}
+		return tempTail;
+
+	}
+
+	@Override
+	public boolean canBeJumped() {
+		return true;
+	}
+
+	@Override
+	public String getID() {
+		return ID;
+	}
 }
