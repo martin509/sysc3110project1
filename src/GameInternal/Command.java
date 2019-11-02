@@ -89,6 +89,7 @@ public class Command {
 		
 		if (!cmd.next().equals("move")) {
 			System.out.println("Invalid command, try again: ");
+			cmd.close();
 			return processFromInput(g);
 		}
 		
@@ -96,6 +97,7 @@ public class Command {
 		
 		if (!tempID.equals("Fox") && !tempID.equals("Rabbit")) {
 			System.out.println("Invalid command, try again: ");
+			cmd.close();
 			return processFromInput(g);
 		}
 		
@@ -107,6 +109,7 @@ public class Command {
 			tempY = Integer.parseInt(cmd.next());
 		}catch (Exception e) {
 			System.out.println("Invalid command, try again: ");
+			cmd.close();
 			return processFromInput(g);
 		}
 		

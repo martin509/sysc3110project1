@@ -390,19 +390,70 @@ public class Game {
 	}
 	
 	/**
+	 * Output the board onto the console.
+	 */
+	public void outputBoard() {
+		for (int x=0; x<boardWidth; x++) {
+			String tempStr = ""; //The specified row.
+			
+			for (int y=0; y<boardHeight; y++) {
+				if (board[x][y] == null) {
+					tempStr += "-";
+				}
+				else {
+					String type = board[x][y].getID().substring(0, board[x][y].getID().indexOf(' '));
+					
+					if (type.equals("Fox")) {
+						tempStr += 'F';
+					}
+					else if (type.equals("Rabbit")) {
+						tempStr += 'R';
+					}
+					else if (type.equals("Hill")) {
+						tempStr += '*';
+					}
+					else if (type.equals("Hole")) {
+						tempStr += '0';
+					}
+					else if (type.equals("Mushroom")) {
+						tempStr += 'M';
+					}
+				}
+			}
+			
+			System.out.println(tempStr);
+		}
+	}
+	
+	/**
 	 * basic Game constructor
 	 * @param width
 	 * @param height
 	 */
 	public Game(int width, int height) {
 		board = new GamePiece[width][height];
-		for(GamePiece[] x: board) {
-			for(GamePiece y: x) {
-				y = null;
-			}
-		}
 		boardWidth = width;
 		boardHeight = height;
 		idList = new ArrayList<String>();
+	}
+	
+	public static void main(String[] args) {
+		Game g = new Game(5, 5);
+		Command cmd = null;
+		
+		g.addPiece(0, 0, new Hole(g.genNewID(PieceType.HOLE), 0, 0));
+		g.addPiece(0, 4, new Hole(g.genNewID(PieceType.HOLE), 0, 4));
+		g.addPiece(4, 0, new Hole(g.genNewID(PieceType.HOLE), 4, 0));
+		g.addPiece(4, 4, new Hole(g.genNewID(PieceType.HOLE), 4, 4));
+		g.addPiece(2, 2, new Hole(g.genNewID(PieceType.HOLE), 2, 2));
+		
+		g.addPiece(1, 3, new Mushroom(g.genNewID(PieceType.MUSHROOM), 1, 3));
+		g.addPiece(4, 2, new Mushroom(g.genNewID(PieceType.MUSHROOM), 4, 2));
+		
+		g.addPiece(0, 3, new Rabbit(g.genNewID(PieceType.RABBIT), 0, 3));
+		g.addPiece(2, 4, new Rabbit(g.genNewID(PieceType.RABBIT), 2, 4));
+		
+		g.outputBoard();
+		cmd = new Command(g);
 	}
 }
