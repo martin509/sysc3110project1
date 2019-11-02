@@ -9,7 +9,7 @@ package GameInternal;
  *
  * @author jweho
  */
-enum Direction {
+public enum Direction {
     NORTH,
     SOUTH,
     EAST,
