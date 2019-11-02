@@ -10,5 +10,20 @@ package GameInternal;
  * @author jweho
  */
 public enum DIRECTION {
-	NORTH_SOUTH, EAST_WEST
+    NORTH,
+    SOUTH,
+    EAST,
+    WEST;
+
+    private DIRECTION opposite;
+    static {
+        NORTH.opposite = SOUTH;
+        SOUTH.opposite = NORTH;
+        EAST.opposite = WEST;
+        WEST.opposite = EAST;
+    }
+
+    public DIRECTION getOppositeDirection() {
+        return opposite;
+    }
 }
