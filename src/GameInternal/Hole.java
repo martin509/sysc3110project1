@@ -11,8 +11,8 @@ package GameInternal;
  */
 class Hole extends ContainerPiece{
    // check ContainerPiece for method descriptions
-    public Hole(String ID, int x, int y){
-    	super(ID, x, y);
+    public Hole(String ID){
+    	super(ID);
     }
     
     @Override

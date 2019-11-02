@@ -11,12 +11,12 @@ package GameInternal;
  */
 class FoxBit extends GamePiece{
 	
-    private Fox partOfFox;
+    private final Fox partOfFox;
     private FoxBit ahead;
     private FoxBit behind;
 
-    public FoxBit(Fox fox, String ID, int x, int y){
-    	super(ID, x, y);
+    public FoxBit(Fox fox, String ID){
+    	super(ID);
     	this.movable = true;
         partOfFox = fox;
     }

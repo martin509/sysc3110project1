@@ -9,7 +9,21 @@ package GameInternal;
  *
  * @author jweho
  */
-enum DIRECTION {
-    NORTH_SOUTH,
-    EAST_WEST
+enum Direction {
+    NORTH,
+    SOUTH,
+    EAST,
+    WEST;
+
+    private Direction opposite;
+    static {
+        NORTH.opposite = SOUTH;
+        SOUTH.opposite = NORTH;
+        EAST.opposite = WEST;
+        WEST.opposite = EAST;
+    }
+
+    public Direction getOppositeDirection() {
+        return opposite;
+    }
 }

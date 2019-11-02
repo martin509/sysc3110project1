@@ -11,8 +11,8 @@ package GameInternal;
  */
 class Mushroom extends GamePiece{
     
-    public Mushroom(String ID, int x, int y){
-        super(ID, x, y);
+    public Mushroom(String ID){
+        super(ID);
     }
     
     @Override

@@ -12,8 +12,8 @@ package GameInternal;
 class Hill extends ContainerPiece{
     
     // check ContainerPiece for method descriptions
-    public Hill(String ID, int x, int y){
-        super(ID, x, y);
+    public Hill(String ID){
+        super(ID);
     }
     
     @Override

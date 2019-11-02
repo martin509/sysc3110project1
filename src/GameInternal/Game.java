@@ -4,47 +4,15 @@ import java.util.ArrayList;
 
 public class Game {
 
-	private GamePiece[][] board;
-	private int boardWidth, boardHeight;
-	private ArrayList<String> idList; //Need a list of IDs that have already been made, to avoid duplicate keys.
-	
-	private GamePiece getObjectAt(int x, int y) {
-		return board[x][y];
-	}
-	
-	public GamePiece getPiece(String ID) {	
-		String type = ID.split(" ")[0];
-		ArrayList<GamePiece> pieces;
-		switch(type) {
-		case "Rabbit":
-			pieces = getPiecesOfType(PieceType.RABBIT);
-		break;
-		case "Fox":
-			pieces = getPiecesOfType(PieceType.FOX_EW);
-		break;
-		case "Hill":
-			pieces = getPiecesOfType(PieceType.HILL);
-			break;
-		case "Hole":
-			pieces = getPiecesOfType(PieceType.HOLE);
-			break;
-		default:
-			pieces = getPiecesOfType(PieceType.MUSHROOM);
-		}
-		for(GamePiece p: pieces) {
-			if(p.getID().contentEquals(ID)) {
-				return p;
-			}
-		}
-		return null;
-	}
-	
+
+	private ArrayList<String> idList;
+        private Board board;
 	/**
 	 * Checks for a win state in the game.
 	 * @return whether or not all rabbits are in holes. Defaults to true if there are no rabbits.
 	 */
 	public boolean isGameWon() {
-		ArrayList<GamePiece> rabbits = getPiecesOfType(PieceType.RABBIT);
+		ArrayList<GamePiece> rabbits = board.getPiecesOfType(new Rabbit(""));
 		for(GamePiece r: rabbits) {
 			if(!((Rabbit)r).isInHole()) {
 				return false;
@@ -190,164 +158,7 @@ public class Game {
         	return false;
         }
     }
-    /**
-     * Move rabbit to a new location
-     * @param piece the fox being moved
-     * @param x x coordinate of the final location
-     * @param y y coordinate of the final location
-     * @return if the move was made or not
-     */
-    public boolean moveRabbit (Rabbit piece, int x, int y){
-    //this works the same way as moveFox, but without all the extra bits
-        if(canMove(piece, x, y)){
-            piece.setX(x);
-            piece.setY(y);
-            board[x][y] = piece;
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * This function moves a fox an all of its bits to a desired location
-     * if possible
-     * @param piece the fox being moved
-     * @param x x coordinate of the final location
-     * @param y y coordinate of the final location
-     * @return if the move was made or not
-     */
-    public boolean moveFox(Fox piece, int x, int y){
-        if(canMove(piece, x, y)){ // can the fox move to where I want to place it
-            boolean isVert;
-            // is the movement vertical or horizonal
-            if(piece.getAxis() == DIRECTION.EAST_WEST){
-                isVert = false;
-            } else {
-                isVert = true;
-            }
-
-            // used the hold the current bit being moved
-            FoxBit currBit = piece.getHead();
-
-            // go through a move each bit
-            for(int i = 0; i < piece.getLength(); i++){
-                if(i == 0){ // moving the head and the fox location
-                    piece.setX(x);
-                    piece.setY(y);
-                    currBit.setX(x);
-                    currBit.setY(y);
-                    board[x][y] = currBit;
-                } else { // moving the rest of the body
-                    if(isVert){
-                        currBit.setX(x);
-                        currBit.setY(y - i);
-                        board[x][y - i] = currBit;
-                    } else {
-                        currBit.setX(x - i);
-                        currBit.setY(y);
-                        board[x - i][y] = currBit;
-                    }
-                }
-                currBit = currBit.getBehind();
-            }
-            return true;
-        }else{ // the move is not possible
-            return false;
-        }
-    }
-	
-	/**
-	 * The public-facing addPiece.
-	 * @param x
-	 * @param y
-	 * @param piece
-	 * @return whether or not it succeeded
-	 */
-	public boolean addPiece(int x, int y, PieceType piece) {
-		switch(piece) {
-		case FOX_EW:
-			return addPiece(x, y, new Fox(genNewID(piece), x, y, 1, DIRECTION.EAST_WEST));
-		case FOX_NS:
-			return addPiece(x, y, new Fox(genNewID(piece), x, y, 1, DIRECTION.NORTH_SOUTH));
-		case RABBIT:
-			return addPiece(x, y, new Rabbit(genNewID(piece), x, y));
-		case HILL:
-			return addPiece(x, y, new Hill(genNewID(piece), x, y));
-		case HOLE:
-			return addPiece(x, y, new Hole(genNewID(piece), x, y));
-		default:
-			return addPiece(x, y, new Mushroom(genNewID(piece), x, y));
-		}
-	}
-	
-	/**
-	 * Helper method for addPiece.
-	 * @param x
-	 * @param y
-	 * @param piece
-	 * @return whether or not it succeeded.
-	 */
-	private boolean addPiece(int x, int y, GamePiece piece) {
-		if(x >= boardWidth || y >= boardHeight || x < 0 || y < 0) {
-			return false;
-		}
-		if(board[x][y] == null) {
-			board[x][y] = piece;
-			return true;
-		}else if(board[x][y] instanceof Hole && piece instanceof Rabbit) {
-				Hole container = (Hole)board[x][y];
-				container.putIn(piece);
-				return true;
-		}else {
-			return false;
-		}
-	}
-	
-	
-	public ArrayList<GamePiece> getPiecesOfType(PieceType piece) {
-		GamePiece compared;
-		ArrayList<GamePiece> pieces = new ArrayList<GamePiece>();
-		switch(piece) {
-		case FOX_EW: case FOX_NS:
-			compared = new Fox("", 0, 0, 0, DIRECTION.NORTH_SOUTH);
-			break;
-		case RABBIT:
-			compared = new Rabbit("", 0, 0);
-			break;
-		case HILL:
-			compared = new Hill("", 0, 0);
-			break;
-		case HOLE:
-			compared = new Hole("", 0, 0);
-			break;
-		default:
-			compared = new Mushroom("", 0, 0);
-		}
-		for(int x = 0; x < boardWidth; x++) {
-			for(int y = 0; y < boardHeight; y++) {
-				if(board[x][y] != null) {
-					if(board[x][y].getClass().equals(compared.getClass())) {
-						pieces.add(board[x][y]);
-					}else if(board[x][y] instanceof ContainerPiece) {
-						ContainerPiece cont = (ContainerPiece) board[x][y];
-						if(cont.takeOut().getClass().equals(compared.getClass())) {
-							pieces.add(cont.takeOut());
-						}
-					}
-				}
-			}
-		}
-		return pieces;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public GamePiece[][] getBoard() {
-		return board;
-	}
+		
 	
 	/**
 	 * Generates a new ID for a given Piece that hasn't been taken.
@@ -395,14 +206,5 @@ public class Game {
 	 * @param height
 	 */
 	public Game(int width, int height) {
-		board = new GamePiece[width][height];
-		for(GamePiece[] x: board) {
-			for(GamePiece y: x) {
-				y = null;
-			}
-		}
-		boardWidth = width;
-		boardHeight = height;
-		idList = new ArrayList<String>();
 	}
 }

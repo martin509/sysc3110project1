@@ -15,7 +15,7 @@ abstract class ContainerPiece extends GamePiece {
     public abstract boolean putIn(GamePiece piece); //putting a piece in
     public abstract GamePiece takeOut(); // taking a piece out
     public abstract GamePiece check(); // what does this contain?
-    ContainerPiece(String ID, int x, int y){
-    	super(ID, x, y);
+    ContainerPiece(String ID){
+    	super(ID);
     }
 }

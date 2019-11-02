@@ -1,6 +1,6 @@
 package GameInternal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ class Test_Pieces {
 		String errorMsg;
 		for(int n = 0; n < pieces.length; n++) {
 			errorMsg = "Piece " + pieces[n].getID() + "'s movable value should be " + results[n];
-			assertEquals(results[n], pieces[n].canBeMoved(), errorMsg);
+			assertEquals(results[n], pieces[n].canBeMoved());
 		}
 		assertEquals(true, fox1.canBeMoved(), "Fox1's head should be movable.");
 		assertEquals(true, fox1.getHead().canBeMoved(), "Fox1's head should be movable.");
