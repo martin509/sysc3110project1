@@ -200,8 +200,6 @@ public class Game {
     public boolean moveRabbit (Rabbit piece, int x, int y){
     //this works the same way as moveFox, but without all the extra bits
         if(canMove(piece, x, y)){
-            piece.setX(x);
-            piece.setY(y);
             board[x][y] = piece;
             return true;
         } else {
@@ -441,17 +439,17 @@ public class Game {
 		Game g = new Game(5, 5);
 		Command cmd = null;
 		
-		g.addPiece(0, 0, new Hole(g.genNewID(PieceType.HOLE), 0, 0));
-		g.addPiece(0, 4, new Hole(g.genNewID(PieceType.HOLE), 0, 4));
-		g.addPiece(4, 0, new Hole(g.genNewID(PieceType.HOLE), 4, 0));
-		g.addPiece(4, 4, new Hole(g.genNewID(PieceType.HOLE), 4, 4));
-		g.addPiece(2, 2, new Hole(g.genNewID(PieceType.HOLE), 2, 2));
+		g.addPiece(0, 0, new Hole(g.genNewID(PieceType.HOLE)));
+		g.addPiece(0, 4, new Hole(g.genNewID(PieceType.HOLE)));
+		g.addPiece(4, 0, new Hole(g.genNewID(PieceType.HOLE)));
+		g.addPiece(4, 4, new Hole(g.genNewID(PieceType.HOLE)));
+		g.addPiece(2, 2, new Hole(g.genNewID(PieceType.HOLE)));
 		
-		g.addPiece(1, 3, new Mushroom(g.genNewID(PieceType.MUSHROOM), 1, 3));
-		g.addPiece(4, 2, new Mushroom(g.genNewID(PieceType.MUSHROOM), 4, 2));
+		g.addPiece(1, 3, new Mushroom(g.genNewID(PieceType.MUSHROOM)));
+		g.addPiece(4, 2, new Mushroom(g.genNewID(PieceType.MUSHROOM)));
 		
-		g.addPiece(0, 3, new Rabbit(g.genNewID(PieceType.RABBIT), 0, 3));
-		g.addPiece(2, 4, new Rabbit(g.genNewID(PieceType.RABBIT), 2, 4));
+		g.addPiece(0, 3, new Rabbit(g.genNewID(PieceType.RABBIT)));
+		g.addPiece(2, 4, new Rabbit(g.genNewID(PieceType.RABBIT)));
 		
 		g.outputBoard();
 		cmd = new Command(g);
