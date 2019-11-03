@@ -445,8 +445,8 @@ public class Game {
 		g.addPiece(4, 4, new Hole(g.genNewID(PieceType.HOLE)));
 		g.addPiece(2, 2, new Hole(g.genNewID(PieceType.HOLE)));
 		
-		g.addPiece(1, 3, new Mushroom(g.genNewID(PieceType.MUSHROOM), 1, 3));
-		g.addPiece(4, 2, new Mushroom(g.genNewID(PieceType.MUSHROOM), 4, 2));
+		g.addPiece(1, 3, new Mushroom(g.genNewID(PieceType.MUSHROOM)));
+		g.addPiece(4, 2, new Mushroom(g.genNewID(PieceType.MUSHROOM)));
 		
 		g.addPiece(0, 3, new Rabbit(g.genNewID(PieceType.RABBIT)));
 		g.addPiece(2, 4, new Rabbit(g.genNewID(PieceType.RABBIT)));
