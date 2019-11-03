@@ -13,7 +13,7 @@ public class Board {
 	private GamePiece[][] board;
 	private int boardWidth, boardHeight;
 
-	public void Board(int width, int height) {
+	public Board(int width, int height) {
 		board = new GamePiece[width][height];
 		boardWidth = width;
 		boardHeight = height;
