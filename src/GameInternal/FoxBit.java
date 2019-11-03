@@ -10,8 +10,8 @@ public class FoxBit extends GamePiece {
 	private FoxBit ahead;
 	private FoxBit behind;
 
-	public FoxBit(Fox fox, String ID) {
-		super(ID);
+	public FoxBit(Fox fox) {
+		super();
 		this.movable = true;
 		partOfFox = fox;
 	}
@@ -88,14 +88,5 @@ public class FoxBit extends GamePiece {
 	@Override
 	public boolean canBeJumped() {
 		return true;
-	}
-	
-	/**
-	 * Method getID inherited from GamePiece is used to find the ID of the GamePiece.
-	 * @return String ID of the GamePiece
-	 */
-	@Override
-	public String getID() {
-		return ID;
 	}
 }

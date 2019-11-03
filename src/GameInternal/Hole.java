@@ -8,8 +8,8 @@ public class Hole extends ContainerPiece {
 	
 	private GamePiece contains;
 	// check ContainerPiece for method descriptions
-	public Hole(String ID) {
-		super(ID);
+	public Hole() {
+		super();
 		contains = null;
 	}
 	
@@ -70,11 +70,6 @@ public class Hole extends ContainerPiece {
 		} else {
 			return true;
 		}
-	}
-
-	@Override
-	public String getID() {
-		return this.ID;
 	}
 
 	@Override

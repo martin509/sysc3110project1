@@ -11,19 +11,19 @@ public class Fox extends MovablePiece {
     private final DIRECTION axisBackward;
     private final int length;
 
-    public Fox(String ID, int length, DIRECTION axisForward) {
-        super(ID);
+    public Fox(int length, DIRECTION axisForward) {
+        super();
         this.axisForward = axisForward;
         axisBackward = axisForward.getOppositeDirection();
         this.length = length;
         
         //Based on the value of length the fox is initialized with FoxBits.
         if (length > 0) {
-            head = new FoxBit(this, this.getID() + "_bit0");//start with the head
+            head = new FoxBit(this);//start with the head
             FoxBit tempTail = head;
             for (int i = 1; i < length; i++) {//for the length of the fox
                 FoxBit newTail;
-                newTail = new FoxBit(this, this.getID() + "_bit" + i);//make a new FoxBit
+                newTail = new FoxBit(this);//make a new FoxBit
                 newTail.setAhead(tempTail);//set it to be behind the previous one
                 tempTail.setBehind(newTail);//set the previous one to be ahead of the new one
                 tempTail = newTail;//make the new one the old one and repeat
@@ -67,13 +67,5 @@ public class Fox extends MovablePiece {
     @Override
     public boolean canBeJumped() {
         return true;
-    }
-    /**
-     * Method returns the ID of the fox.
-     * @return String ID of the fox.
-     */
-    @Override
-    public String getID() {
-        return ID;
     }
 }

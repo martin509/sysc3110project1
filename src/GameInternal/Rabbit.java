@@ -7,8 +7,8 @@ package GameInternal;
 public class Rabbit extends MovablePiece{
     private boolean inHole = false;
     
-    public Rabbit(String ID){
-    	super(ID);
+    public Rabbit(){
+    	super();
     }
     
     public boolean isInHole(){
@@ -23,11 +23,5 @@ public class Rabbit extends MovablePiece{
     @Override
     public boolean canBeJumped() {
         return true;
-    }
-
-    @Override
-    public String getID() {
-        return this.ID;
-    }
-    
+    }    
 }
