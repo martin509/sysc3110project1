@@ -16,7 +16,7 @@ public class Rabbit extends MovablePiece{
     	super(ID);
     }
     
-    public boolean getInHole(){
+    public boolean isInHole(){
         return inHole;
     }
     
