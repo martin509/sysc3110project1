@@ -1,19 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package GameInternal;
 
 /**
- *
- * @author jweho
+ * Class Hill is used to represent pieces rabbits can jump onto but foxes cannot move onto.
+ * @author James Horner
  */
 public class Hill extends ContainerPiece {
 
 	// check ContainerPiece for method descriptions
-	public Hill(String ID, int x, int y) {
-		super(ID, x, y);
+	public Hill(String ID) {
+		super(ID);
 	}
 
 	@Override

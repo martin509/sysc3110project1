@@ -1,17 +1,12 @@
-    /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package GameInternal;
 
 /**
- *
- * @author jweho
+ * Class MovablePiece is the super class for Rabbit, Fox, and any future gamepiece that has the ability to move.
+ * @author James Horner
  */
 abstract class MovablePiece extends GamePiece{
-	protected MovablePiece(String ID, int x, int y) {
-		super(ID, x, y);
+	protected MovablePiece(String ID) {
+		super(ID);
 		movable = true;
 	}
 	
