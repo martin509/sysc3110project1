@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package GameInternal;
 
 /**
- *
- * @author jweho
+ * Class ContainerPiece functions as super class for hole, hill and any other future piece that could contain another piece.
+ * @author James Horner
  */
 abstract class ContainerPiece extends GamePiece {
     protected GamePiece contains;
@@ -15,7 +10,7 @@ abstract class ContainerPiece extends GamePiece {
     public abstract boolean putIn(GamePiece piece); //putting a piece in
     public abstract GamePiece takeOut(); // taking a piece out
     public abstract GamePiece check(); // what does this contain?
-    ContainerPiece(String ID, int x, int y){
-    	super(ID, x, y);
+    ContainerPiece(String ID){
+    	super(ID);
     }
 }

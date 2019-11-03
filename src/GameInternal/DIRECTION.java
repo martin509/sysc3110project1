@@ -1,20 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package GameInternal;
 
 /**
- *
- * @author jweho
+ * Enum DIRECTION provides a reference for directions on the board.
+ * @author James Horner
  */
 public enum DIRECTION {
     NORTH,
     SOUTH,
     EAST,
     WEST;
-
+	
+	//Each Direction has it's associated opposite.
     private DIRECTION opposite;
     static {
         NORTH.opposite = SOUTH;
@@ -22,7 +18,7 @@ public enum DIRECTION {
         EAST.opposite = WEST;
         WEST.opposite = EAST;
     }
-
+    //getOppositeDirection returns a directions opposite.
     public DIRECTION getOppositeDirection() {
         return opposite;
     }

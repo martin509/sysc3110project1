@@ -1,8 +1,8 @@
 package GameInternal;
 
 /**
- * Class Fox represents the Fox piece in the game and is a collection of foxbits that actually get put onto the board.
- * @author jweho
+ * Class Fox represents the Fox piece in the game and is a collection of FoxBits that actually get put onto the board.
+ * @author James Horner
  */
 public class Fox extends MovablePiece {
 
