@@ -41,7 +41,7 @@ public class Fox extends MovablePiece {
      * Method returns what direction is backward for the fox.
      * @return DIRECTION for the backward direction of the fox.
      */
-    public DIRECTION getAxisBackard() {
+    public DIRECTION getAxisBackward() {
         return axisBackward;
     }
     

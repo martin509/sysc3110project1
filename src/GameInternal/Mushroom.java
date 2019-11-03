@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package GameInternal;
 
 /**
- *
- * @author jweho
+ * Class Mushroom represents the mushroom piece in the game.
+ * @author James Horner
  */
 public class Mushroom extends GamePiece {
 
@@ -25,6 +20,10 @@ public class Mushroom extends GamePiece {
 		return this.ID;
 	}
 
+	/**
+	 * Method canBeMoved inherited from GamePiece indicates whether a piece can be moved or not.
+	 * @return boolean false because mushrooms cannot be moved.
+	 */
 	@Override
 	public boolean canBeMoved() {
 		return false;
