@@ -7,7 +7,6 @@ import java.util.ArrayList;
  * @author James Horner
  */
 public class Board {
-
     private GamePiece[][] board;
     private int boardWidth, boardHeight;
 
