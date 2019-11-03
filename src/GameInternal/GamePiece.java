@@ -17,4 +17,5 @@ public abstract class GamePiece{
     public boolean equals(GamePiece piece){
         return ID.equals(piece.getID());
     }
+    
 }
