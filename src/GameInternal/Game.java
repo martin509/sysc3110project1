@@ -27,13 +27,6 @@ public class Game {
 	public Board getBoard() {
 		return board;
 	}
-		
-	/**
-	 * Output the board onto the console.
-	 */
-	public void outputBoard() {
-		
-	}
 	
 	/**
 	 * basic Game constructor
