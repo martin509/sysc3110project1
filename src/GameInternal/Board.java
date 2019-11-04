@@ -65,24 +65,6 @@ public class Board {
 	}
 
 	/**
-	 * Method getPieceWithID is used to find a piece on the board with a specific
-	 * ID.
-	 * 
-	 * @param ID String for the ID of the piece being looked for.
-	 * @return GamePiece on the board with matching ID.
-	 */
-	public GamePiece getPieceWithID(String ID) {
-		for (int i = 0; i < boardWidth; i++) {
-			for (int j = 0; j < board[i].length; j++) {// iterate through board.
-				if (board[i][j].getID().equals(ID)) {// until a matching piece is found.
-					return board[i][j];
-				}
-			}
-		}
-		return null;// return null if board does not contain a matching piece.
-	}
-
-	/**
 	 * Method addPiece adds a piece to a specific location on the board.
 	 * 
 	 * @param x     int for x coordinate of the piece.
@@ -91,20 +73,43 @@ public class Board {
 	 * @return boolean for whether the piece could be successfully added.
 	 */
 	public boolean addPiece(int x, int y, GamePiece piece) {
-		if (x >= boardWidth || y >= boardHeight || x < 0 || y < 0) {// check that the coordinates are valid.
+		if (!checkOnBoard(x,y)) {// check that the coordinates are valid.
 			return false;
-		}
-		if (board[x][y] == null) {// if there is not piece that is at the coordinates already.
-			if (getPieceWithID(piece.getID()) == null) {// check if there are any pieces on the board with same ID.
-				board[x][y] = piece;// if not add the piece.
-				return true;
-			} else {
-				return false;
-			}
-		} else if (board[x][y] instanceof Hole && piece instanceof Rabbit) {// if the piece at the coordinates is a hole
-																			// and the piece being added is a rabbit.
+		} else if (board[x][y] == null) {// if there is a piece that is at the coordinates already.
+			board[x][y] = piece;// if not add the piece.
+			return true;
+		} else if (board[x][y] instanceof Hole && (piece instanceof Rabbit ||piece instanceof Mushroom)) {// if the piece at the coordinates is a hole and the piece being added is a rabbit.
 			Hole container = (Hole) board[x][y];
 			return container.putIn(piece);// try adding the rabbit to the hole and return the result.
+		} else if (piece instanceof Fox){//if piece being added is a fox.
+			Fox fox = (Fox) piece;//cast piece to a new fox object to avoid repetition.
+			int tailX = x;//reset the location to the head.
+			int tailY = y;
+			for(int i = fox.getLength(); i > 0; i--) {//iterate over the FoxBits to find the location of the tail.
+				tailX = getAdjacentCoordinate(tailX,fox.getAxisBackward(),true);
+				tailY = getAdjacentCoordinate(tailY,fox.getAxisBackward(),false);
+				if(board[tailY][tailX]!=null) {//if any of the body pieces would overwrite another piece
+					return false;//return unsuccessful.
+				}
+			}
+			if(checkOnBoard(tailX,tailY)) {//if the tail would be on the board
+				tailX = x;//reset the location of the tail to the head.
+				tailY = y;
+				FoxBit body = fox.getHead().getBehind();//make a body tracker FoxBit.
+				
+				board[x][y] = fox.getHead();//add the head to the board.
+				
+				while(body!=null) {//while not at the tail of the fox
+					tailX = getAdjacentCoordinate(tailX,fox.getAxisBackward(),true);//find the coordinate behind the current coordinate.
+					tailY = getAdjacentCoordinate(tailY,fox.getAxisBackward(),false);
+					board[tailX][tailY] = body;//add the current body piece to the cell.
+					body = body.getBehind();//get the next body piece to add.
+				}
+				return true;//return successful.
+			} else {//if the tail would be off the board return false.
+				return false;
+			}
+			
 		} else {
 			return false;// default to false.
 		}
@@ -348,28 +353,3 @@ public class Board {
 		}
 	}
 }
-//code that was removed from a previous iteration please ignore
-/*
- * public boolean moveRabbit (Rabbit piece, int x, int y){ //this works the same
- * way as moveFox, but without all the extra bits if(canMove(piece, x, y)){
- * piece.setX(x); piece.setY(y); board[x][y] = piece; return true; } else {
- * return false; } }
- * 
- * public boolean moveFox(Fox piece, int x, int y){ if(canMove(piece, x, y)){ //
- * can the fox move to where I want to place it boolean isVert; // is the
- * movement vertical or horizonal if(piece.getAxis() == DIRECTION.EAST_WEST){
- * isVert = false; } else { isVert = true; }
- * 
- * // used the hold the current bit being moved FoxBit currBit =
- * piece.getHead();
- * 
- * // go through a move each bit for(int i = 0; i < piece.getLength(); i++){
- * if(i == 0){ // moving the head and the fox location piece.setX(x);
- * piece.setY(y); currBit.setX(x); currBit.setY(y); board[x][y] = currBit; }
- * else { // moving the rest of the body if(isVert){ currBit.setX(x);
- * currBit.setY(y - i); board[x][y - i] = currBit; } else { currBit.setX(x - i);
- * currBit.setY(y); board[x - i][y] = currBit; } } currBit =
- * currBit.getBehind(); } return true; }else{ // the move is not possible return
- * false; } }
- * 
- */

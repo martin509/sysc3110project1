@@ -6,18 +6,13 @@ package GameInternal;
  */
 public class Mushroom extends GamePiece {
 
-	public Mushroom(String ID) {
-		super(ID);
+	public Mushroom() {
+		super();
 	}
 
 	@Override
 	public boolean canBeJumped() {
 		return true;
-	}
-
-	@Override
-	public String getID() {
-		return this.ID;
 	}
 
 	/**
