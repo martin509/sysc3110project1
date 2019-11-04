@@ -20,19 +20,17 @@ import GameInternal.Rabbit;
 //TODO modularize error messages.
 
 class Test_Pieces {
-	Fox fox1 = new Fox("Fox1", 1, DIRECTION.NORTH);
-	Hill hill1 = new Hill("Hill1");
-	Hole hole1 = new Hole("Hole1");
-	Mushroom mush1 = new Mushroom("Mush1");
-	Rabbit rabb1 = new Rabbit("Rabb1");
+	Fox fox1 = new Fox(1, DIRECTION.NORTH);
+	Hill hill1 = new Hill();
+	Hole hole1 = new Hole();
+	Mushroom mush1 = new Mushroom();
+	Rabbit rabb1 = new Rabbit();
 
 	@Test
 	void testMovable() {
-		GamePiece[] pieces = { hill1, hole1, mush1 };
-		String errorMsg;
-		for (int n = 0; n < pieces.length; n++) {
-			assertEquals(false, pieces[n].canBeMoved(), pieces[n].getID() + " should not be movable.");
-		}
+		assertEquals(false, hill1, "Hill1 should not be movable.");
+		assertEquals(false, hole1, "Hole1 should not be movable.");
+		assertEquals(false, mush1, "Mushroom1 should not be movable.");
 		assertEquals(true, fox1.canBeMoved(), "Fox1 should be movable.");
 		assertEquals(true, fox1.getHead().canBeMoved(), "Fox1's head should be movable.");
 		assertEquals(true, rabb1.canBeMoved(), "Rabb1 should be movable.");
@@ -54,14 +52,6 @@ class Test_Pieces {
 		assertEquals(false, rabb1.canBeMoved(), "Rabb1 should not be able to be moved after being put in a hole.");
 	}
 	
-	@Test
-	void testGetID() {
-		assertEquals("Fox1", fox1.getID(), "Finding ID of Fox1 failed, result: " + fox1.getID());
-		assertEquals("Hill1", hill1.getID(), "Finding ID of Hill1 failed, result: " + hill1.getID());
-		assertEquals("Hole1", hole1.getID(), "Finding ID of Hole1 failed, result: " + hole1.getID());
-		assertEquals("Mush1", mush1.getID(), "Finding ID of Mush1 failed, result: " + mush1.getID());
-		assertEquals("Rabb1", rabb1.getID(), "Finding ID of Rabb1 failed, result: " + rabb1.getID());
-	}
 	
 	@Test
 	void testContainer() {
