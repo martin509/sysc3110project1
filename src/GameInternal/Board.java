@@ -60,7 +60,7 @@ public class Board {
 		if (!checkOnBoard(x,y)) {// check if coordinates are on the board.
 			return null;
 		} else {
-			return board[x][y];
+			return board[y][x];
 		}
 	}
 

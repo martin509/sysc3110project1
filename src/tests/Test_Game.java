@@ -27,14 +27,10 @@ import GameInternal.Rabbit;
 public class Test_Game {
 	Game g1;
 	Game g2;
-	
-	@Before
-	public void setUp() {
-		g1 = new Game();
-	}
-	
+		
 	@Test
 	void testIsGameWon() {
+		g1 = new Game();
 		assertFalse(g1.isGameWon());
 		Board board = g1.getBoard();
 		Rabbit r1 = (Rabbit)board.getPieceAt(0, 2);
@@ -55,14 +51,15 @@ public class Test_Game {
 		assertNotNull(g2.getBoard());
 		Board board = g2.getBoard();
 		GamePiece[][] shouldContain = {{new Hole(), new FoxBit(null), new Hill(), null, new Hole()},
-				{null,new FoxBit(null),null,null,null},
+				{null,new Fox(2,DIRECTION.SOUTH),null,null,null},
 				{new Hill(),null,new Hole(),null, new Hill()},
-				{new Mushroom(),null,null,new FoxBit(null),null},
-				{new Hole(), null, new Hill(), new FoxBit(null), new Hole()}
+				{new Mushroom(),null,null,new Fox(2,DIRECTION.NORTH),null},
+				{new Hole(), null, new Hill(), null, new Hole()}
 		};
 		for(int i = 0; i < 5; i++) {
 			for(int j = 0; j < 5; j++) {
-				assertEquals(board.getPieceAt(i, j).getClass(),shouldContain[i][j].getClass());
+				if(board.getPieceAt(i, j)!=null)
+					assertEquals(board.getPieceAt(i, j).getClass(),shouldContain[i][j].getClass());
 			}
 		}
 	}
