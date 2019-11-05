@@ -33,8 +33,8 @@ public class Test_Game {
 		g1 = new Game();
 		assertFalse(g1.isGameWon());
 		Board board = g1.getBoard();
-		Rabbit r1 = (Rabbit)board.getPieceAt(0, 2);
-		Rabbit r2 = (Rabbit)board.getPieceAt(2, 4);
+		Rabbit r1 = (Rabbit)((Hill)board.getPieceAt(0, 2)).check();
+		Rabbit r2 = (Rabbit)((Hill)board.getPieceAt(2, 4)).check();
 		board.move(r1, DIRECTION.SOUTH, 2);
 		board.move(r2, DIRECTION.EAST, 2);
 		assertTrue(g1.isGameWon());
