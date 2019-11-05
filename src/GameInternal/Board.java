@@ -35,12 +35,14 @@ public class Board {
 	private int getLocation(GamePiece piece, boolean x) {
 		for (int i = 0; i < boardWidth; i++) {
 			for (int j = 0; j < board[i].length; j++) {// iterate through the board.
-				if (board[i][j].equals(piece)) {// until a piece matching the piece provided is found.
-					if (x) {
-						return j;
-					} // return the x coordinate of the piece.
-					else {
-						return i;
+				if (board[j][i] != null) {
+					if (board[j][i].equals(piece)) {// until a piece matching the piece provided is found.
+						if (x) {
+							return i;
+						} // return the x coordinate of the piece.
+						else {
+							return j;
+						}
 					}
 				}
 			}
@@ -75,19 +77,30 @@ public class Board {
 	public boolean addPiece(int x, int y, GamePiece piece) {
 		if (!checkOnBoard(x, y)) {// check that the coordinates are valid.
 			return false;
-		} else if (board[x][y] == null) {// if there is a piece that is at the coordinates already.
-			board[x][y] = piece;// if not add the piece.
+		} else if (board[y][x] == null) {// if there is a piece that is at the coordinates already.
+			board[y][x] = piece;// if not add the piece.
 			return true;
-		} else if (board[x][y] instanceof Hole && (piece instanceof Rabbit || piece instanceof Mushroom)) {// if the piece at the coordinates is a hole and the piece
-																											// being
-																											// added is
-																											// a rabbit.
-			Hole container = (Hole) board[x][y];
-			if(piece instanceof Rabbit) {
-				Rabbit pieceR = (Rabbit) piece; //evil casting to Rabbit so the Rabbit can be properly be putInHole()
-				pieceR.jumpInHole();
+		} // if the piece at the coordinates is a hole and the piece being added is a
+			// rabbit.
+		else if (board[y][x] instanceof ContainerPiece && (piece instanceof Rabbit || piece instanceof Mushroom)) {
+			if (board[y][x] instanceof Hole) {
+				Hole container = (Hole) board[y][x];
+				if (piece instanceof Rabbit) {
+					if (container.putIn(piece)) {// try adding the rabbit to the hole and return the result.
+						Rabbit pieceR = (Rabbit) piece; // evil casting to Rabbit so the Rabbit can be properly be
+														// putInHole()
+						pieceR.jumpInHole();
+						return true;
+					} else {
+						return false;
+					}
+				} else {// if the piece is a mushroom try to add it to the hole and return the result.
+					return container.putIn(piece);
+				}
+			} else {
+				ContainerPiece container = (ContainerPiece) board[y][x];
+				return container.putIn(piece);
 			}
-			return container.putIn(piece);// try adding the rabbit to the hole and return the result.
 		} else if (piece instanceof Fox) {// if piece being added is a fox.
 			Fox fox = (Fox) piece;// cast piece to a new fox object to avoid repetition.
 			int tailX = x;// reset the location to the head.
@@ -203,15 +216,15 @@ public class Board {
 					} else if (inFront instanceof ContainerPiece) {// if the piece being checked is a hole
 						ContainerPiece destination = (ContainerPiece) inFront;
 						((Rabbit) piece).jumpInHole();
-						if(destination.putIn(piece)) {// try adding the rabbit to the hole.
-							removePieceAt(oldX,oldY);
+						if (destination.putIn(piece)) {// try adding the rabbit to the hole.
+							removePieceAt(oldX, oldY);
 							return true;
 						} else {
 							return false;
 						}
 					} else if (inFront == null) {// if the space is empty
 						board[newY][newX] = piece;// add the rabbit to the empty space.
-						removePieceAt(oldX,oldY);
+						removePieceAt(oldX, oldY);
 						return true;
 					}
 				}
