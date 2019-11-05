@@ -59,7 +59,7 @@ public class Test_Game {
 		for(int i = 0; i < 5; i++) {
 			for(int j = 0; j < 5; j++) {
 				if(board.getPieceAt(i, j)!=null)
-					assertEquals(board.getPieceAt(i, j).getClass(),shouldContain[i][j].getClass());
+					assertEquals(board.getPieceAt(i, j).getClass(),shouldContain[j][i].getClass());
 			}
 		}
 	}
