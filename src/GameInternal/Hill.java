@@ -7,8 +7,8 @@ package GameInternal;
 public class Hill extends ContainerPiece {
 
 	// check ContainerPiece for method descriptions
-	public Hill(String ID) {
-		super(ID);
+	public Hill() {
+		super();
 	}
 
 	@Override
@@ -50,10 +50,4 @@ public class Hill extends ContainerPiece {
 			return contains.canBeJumped();
 		}
 	}
-
-	@Override
-	public String getID() {
-		return this.ID;
-	}
-
 }

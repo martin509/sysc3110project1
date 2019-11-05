@@ -1,19 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package GameInternal;
 
 /**
- *
- * @author jweho
+ * Class Rabbit represents the piece rabbit in the game.
+ * @author James Horner
  */
 public class Rabbit extends MovablePiece{
     private boolean inHole = false;
     
-    public Rabbit(String ID){
-    	super(ID);
+    public Rabbit(){
+    	super();
     }
     
     public boolean isInHole(){
@@ -28,11 +23,5 @@ public class Rabbit extends MovablePiece{
     @Override
     public boolean canBeJumped() {
         return true;
-    }
-
-    @Override
-    public String getID() {
-        return this.ID;
-    }
-    
+    }    
 }
