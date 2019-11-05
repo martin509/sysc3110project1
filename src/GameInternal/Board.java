@@ -84,7 +84,8 @@ public class Board {
 																											// a rabbit.
 			Hole container = (Hole) board[x][y];
 			if(piece instanceof Rabbit) {
-				((Rabbit) piece).jumpInHole();
+				Rabbit pieceR = (Rabbit) piece; //evil casting to Rabbit so the Rabbit can be properly be putInHole()
+				pieceR.jumpInHole();
 			}
 			return container.putIn(piece);// try adding the rabbit to the hole and return the result.
 		} else if (piece instanceof Fox) {// if piece being added is a fox.
