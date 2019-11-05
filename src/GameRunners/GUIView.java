@@ -151,7 +151,16 @@ public class GUIView extends JFrame {
 	 * this is how the controller disables and enables the cancel button
 	 * @param set
 	 */
-	public void SetCancelButton(boolean set) {
+	public void setCancelButton(boolean set) {
 		btnCancel.setEnabled(set);
+	}
+	
+	/**
+	 * @author Andrew
+	 * this changes the text that guides the player
+	 * @param set
+	 */
+	public void setText(String set) {
+		txtStatus.setText(set);
 	}
 }

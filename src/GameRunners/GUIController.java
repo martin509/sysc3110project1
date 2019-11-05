@@ -58,6 +58,7 @@ public class GUIController {
 		isPieceSel = false;
 		pieceToMove = new Point();
 		endLocation = new Point();
+		theView.setText("Select a Fox or a Rabbit");
 	}
 	
 	class CancelListener implements ActionListener{
@@ -66,7 +67,7 @@ public class GUIController {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			isPieceSel = false;
-			theView.SetCancelButton(false);
+			theView.setCancelButton(false);
 			
 		}
 		
@@ -108,9 +109,10 @@ public class GUIController {
 					if(theModel.getBoard().
 							move((MovablePiece)theModel.getBoard().getPieceAt(pieceToMove.x, pieceToMove.y), direction, distance)) {
 						// if the move can be made, move the piece
-						theView.SetCancelButton(false);
+						theView.setCancelButton(false);
 						isPieceSel = false;
 						theView.updateBoard(theModel.getBoard().getBoard());
+						theView.setText("Select a Fox or a Rabbit");
 					}
 				}	
 			} else { // if the no piece has been selected yet
@@ -120,7 +122,8 @@ public class GUIController {
 				if((theModel.getBoard().getPieceAt(pieceToMove.x, pieceToMove.y) instanceof Fox) || 
 						(theModel.getBoard().getPieceAt(pieceToMove.x, pieceToMove.y) instanceof Rabbit)) { //is this piece movable?
 					isPieceSel = true;
-					theView.SetCancelButton(true);
+					theView.setCancelButton(true);
+					theView.setText("Now select a position for the piece to move.");
 				}
 				
 			}
