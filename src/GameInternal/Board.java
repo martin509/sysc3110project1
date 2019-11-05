@@ -145,8 +145,10 @@ public class Board {
 						pieces.add(board[i][j]);// if it does add it to the array
 					} else if (board[i][j] instanceof ContainerPiece) {// if the piece is a ContainerPiece
 						ContainerPiece cont = (ContainerPiece) board[i][j];
-						if (cont.check().getClass().equals(piece.getClass())) {// check the contents
-							pieces.add(cont.check());// add to the array if it matches the class
+						if(cont.check() != null) {
+							if (cont.check().getClass().equals(piece.getClass())) {// check the contents
+								pieces.add(cont.check());// add to the array if it matches the class
+							}
 						}
 					}
 				}
