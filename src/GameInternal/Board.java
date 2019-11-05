@@ -17,9 +17,9 @@ public class Board {
 		board = new GamePiece[width][height];
 		boardWidth = width;
 		boardHeight = height;
-		for (GamePiece[] x : board) {// initialize the board to be all null;
-			for (GamePiece y : x) {
-				y = null;
+		for (int i = 0; i < boardHeight; i++) {// initialize the board to be all null;
+			for (int j = 0; j < boardWidth; j++) {
+				board[i][j] = null;
 			}
 		}
 	}
@@ -56,8 +56,8 @@ public class Board {
 	 * @return GamePiece at the specified grid coordinate null if no piece exists
 	 *         there.
 	 */
-	private GamePiece getPieceAt(int x, int y) {
-		if (x >= boardWidth || x < 0 || y >= boardHeight || y < 0) {// check if coordinates are on the board.
+	public GamePiece getPieceAt(int x, int y) {
+		if (!checkOnBoard(x,y)) {// check if coordinates are on the board.
 			return null;
 		} else {
 			return board[x][y];
