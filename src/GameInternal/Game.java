@@ -60,7 +60,7 @@ public class Game {
 			board.addPiece(mushroomX[i], mushroomY[i], new Mushroom());
 		}
 		int[] foxX = {1,3};
-		int[] foxY = {1,3};
+		int[] foxY = {2,4};
 		DIRECTION[] foxD = {DIRECTION.SOUTH,DIRECTION.NORTH};
 		for(int i=0 ; i < 2; i++) {
 			board.addPiece(foxX[i], foxY[i], new Fox(2,foxD[i]));

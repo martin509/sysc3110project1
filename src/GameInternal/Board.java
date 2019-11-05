@@ -49,6 +49,14 @@ public class Board {
 		}
 		return -1;// if not found return -1.
 	}
+	
+	/**
+	 * @author Andrew MacKinnon
+	 *
+	 */
+	public GamePiece[][] getBoard(){
+		return board;
+	}
 
 	/**
 	 * Method getPieceAt returns the piece at the specific grid coordinate.
