@@ -17,9 +17,9 @@ public class Board {
 		board = new GamePiece[width][height];
 		boardWidth = width;
 		boardHeight = height;
-		for (GamePiece[] x : board) {// initialize the board to be all null;
-			for (GamePiece y : x) {
-				y = null;
+		for (int i = 0; i < boardHeight; i++) {// initialize the board to be all null;
+			for (int j = 0; j < boardWidth; j++) {
+				board[i][j] = null;
 			}
 		}
 	}
@@ -35,12 +35,14 @@ public class Board {
 	private int getLocation(GamePiece piece, boolean x) {
 		for (int i = 0; i < boardWidth; i++) {
 			for (int j = 0; j < board[i].length; j++) {// iterate through the board.
-				if (board[i][j].equals(piece)) {// until a piece matching the piece provided is found.
-					if (x) {
-						return j;
-					} // return the x coordinate of the piece.
-					else {
-						return i;
+				if (board[j][i] != null) {
+					if (board[j][i].equals(piece)) {// until a piece matching the piece provided is found.
+						if (x) {
+							return i;
+						} // return the x coordinate of the piece.
+						else {
+							return j;
+						}
 					}
 				}
 			}
@@ -56,11 +58,11 @@ public class Board {
 	 * @return GamePiece at the specified grid coordinate null if no piece exists
 	 *         there.
 	 */
-	private GamePiece getPieceAt(int x, int y) {
-		if (x >= boardWidth || x < 0 || y >= boardHeight || y < 0) {// check if coordinates are on the board.
+	public GamePiece getPieceAt(int x, int y) {
+		if (!checkOnBoard(x, y)) {// check if coordinates are on the board.
 			return null;
 		} else {
-			return board[x][y];
+			return board[y][x];
 		}
 	}
 
@@ -73,43 +75,62 @@ public class Board {
 	 * @return boolean for whether the piece could be successfully added.
 	 */
 	public boolean addPiece(int x, int y, GamePiece piece) {
-		if (!checkOnBoard(x,y)) {// check that the coordinates are valid.
+		if (!checkOnBoard(x, y)) {// check that the coordinates are valid.
 			return false;
-		} else if (board[x][y] == null) {// if there is a piece that is at the coordinates already.
-			board[x][y] = piece;// if not add the piece.
+		} else if (board[y][x] == null) {// if there is a piece that is at the coordinates already.
+			board[y][x] = piece;// if not add the piece.
 			return true;
-		} else if (board[x][y] instanceof Hole && (piece instanceof Rabbit ||piece instanceof Mushroom)) {// if the piece at the coordinates is a hole and the piece being added is a rabbit.
-			Hole container = (Hole) board[x][y];
-			return container.putIn(piece);// try adding the rabbit to the hole and return the result.
-		} else if (piece instanceof Fox){//if piece being added is a fox.
-			Fox fox = (Fox) piece;//cast piece to a new fox object to avoid repetition.
-			int tailX = x;//reset the location to the head.
+		} // if the piece at the coordinates is a hole and the piece being added is a
+			// rabbit.
+		else if (board[y][x] instanceof ContainerPiece && (piece instanceof Rabbit || piece instanceof Mushroom)) {
+			if (board[y][x] instanceof Hole) {
+				Hole container = (Hole) board[y][x];
+				if (piece instanceof Rabbit) {
+					if (container.putIn(piece)) {// try adding the rabbit to the hole and return the result.
+						Rabbit pieceR = (Rabbit) piece; // evil casting to Rabbit so the Rabbit can be properly be
+														// putInHole()
+						pieceR.jumpInHole();
+						return true;
+					} else {
+						return false;
+					}
+				} else {// if the piece is a mushroom try to add it to the hole and return the result.
+					return container.putIn(piece);
+				}
+			} else {
+				ContainerPiece container = (ContainerPiece) board[y][x];
+				return container.putIn(piece);
+			}
+		} else if (piece instanceof Fox) {// if piece being added is a fox.
+			Fox fox = (Fox) piece;// cast piece to a new fox object to avoid repetition.
+			int tailX = x;// reset the location to the head.
 			int tailY = y;
-			for(int i = fox.getLength(); i > 0; i--) {//iterate over the FoxBits to find the location of the tail.
-				tailX = getAdjacentCoordinate(tailX,fox.getAxisBackward(),true);
-				tailY = getAdjacentCoordinate(tailY,fox.getAxisBackward(),false);
-				if(board[tailY][tailX]!=null) {//if any of the body pieces would overwrite another piece
-					return false;//return unsuccessful.
+			for (int i = fox.getLength(); i > 0; i--) {// iterate over the FoxBits to find the location of the tail.
+				tailX = getAdjacentCoordinate(tailX, fox.getAxisBackward(), true);
+				tailY = getAdjacentCoordinate(tailY, fox.getAxisBackward(), false);
+				if (board[tailY][tailX] != null) {// if any of the body pieces would overwrite another piece
+					return false;// return unsuccessful.
 				}
 			}
-			if(checkOnBoard(tailX,tailY)) {//if the tail would be on the board
-				tailX = x;//reset the location of the tail to the head.
+			if (checkOnBoard(tailX, tailY)) {// if the tail would be on the board
+				tailX = x;// reset the location of the tail to the head.
 				tailY = y;
-				FoxBit body = fox.getHead().getBehind();//make a body tracker FoxBit.
-				
-				board[x][y] = fox.getHead();//add the head to the board.
-				
-				while(body!=null) {//while not at the tail of the fox
-					tailX = getAdjacentCoordinate(tailX,fox.getAxisBackward(),true);//find the coordinate behind the current coordinate.
-					tailY = getAdjacentCoordinate(tailY,fox.getAxisBackward(),false);
-					board[tailX][tailY] = body;//add the current body piece to the cell.
-					body = body.getBehind();//get the next body piece to add.
+				FoxBit body = fox.getHead().getBehind();// make a body tracker FoxBit.
+
+				board[x][y] = fox.getHead();// add the head to the board.
+
+				while (body != null) {// while not at the tail of the fox
+					tailX = getAdjacentCoordinate(tailX, fox.getAxisBackward(), true);// find the coordinate behind the
+																						// current coordinate.
+					tailY = getAdjacentCoordinate(tailY, fox.getAxisBackward(), false);
+					board[tailX][tailY] = body;// add the current body piece to the cell.
+					body = body.getBehind();// get the next body piece to add.
 				}
-				return true;//return successful.
-			} else {//if the tail would be off the board return false.
+				return true;// return successful.
+			} else {// if the tail would be off the board return false.
 				return false;
 			}
-			
+
 		} else {
 			return false;// default to false.
 		}
@@ -145,8 +166,10 @@ public class Board {
 						pieces.add(board[i][j]);// if it does add it to the array
 					} else if (board[i][j] instanceof ContainerPiece) {// if the piece is a ContainerPiece
 						ContainerPiece cont = (ContainerPiece) board[i][j];
-						if (cont.check().getClass().equals(piece.getClass())) {// check the contents
-							pieces.add(cont.check());// add to the array if it matches the class
+						if (cont.check() != null) {
+							if (cont.check().getClass().equals(piece.getClass())) {// check the contents
+								pieces.add(cont.check());// add to the array if it matches the class
+							}
 						}
 					}
 				}
@@ -192,9 +215,16 @@ public class Board {
 						return false;
 					} else if (inFront instanceof ContainerPiece) {// if the piece being checked is a hole
 						ContainerPiece destination = (ContainerPiece) inFront;
-						return destination.putIn(piece);// try adding the rabbit to the hole.
+						((Rabbit) piece).jumpInHole();
+						if (destination.putIn(piece)) {// try adding the rabbit to the hole.
+							removePieceAt(oldX, oldY);
+							return true;
+						} else {
+							return false;
+						}
 					} else if (inFront == null) {// if the space is empty
 						board[newY][newX] = piece;// add the rabbit to the empty space.
+						removePieceAt(oldX, oldY);
 						return true;
 					}
 				}
@@ -206,66 +236,103 @@ public class Board {
 				int oldY;
 				int count = numSpaces;
 				GamePiece inFront;
-				if (direction == fox.getAxisForward() || direction == fox.getAxisBackward()) {//if the direction of movement is valid.
-					if (direction == fox.getAxisForward()) {//if the direction is forward
-						oldX = getLocation(fox.getHead(), true);//get the location of the head
+				if (direction == fox.getAxisForward() || direction == fox.getAxisBackward()) {// if the direction of
+																								// movement is valid.
+					if (direction == fox.getAxisForward()) {// if the direction is forward
+						oldX = getLocation(fox.getHead(), true);// get the location of the head
 						oldY = getLocation(fox.getHead(), false);
-						inFront = getAdjacentPiece(oldX,oldY,direction);//get the location in front of the head.
-					} else {//if the direction is backwards
-						oldX = getLocation(fox.getHead().getTail(), true);//get the location of the tail
+						inFront = getAdjacentPiece(oldX, oldY, direction);// get the location in front of the head.
+					} else {// if the direction is backwards
+						oldX = getLocation(fox.getHead().getTail(), true);// get the location of the tail
 						oldY = getLocation(fox.getHead().getTail(), false);
-						inFront = getAdjacentPiece(oldX,oldY,direction);//get the piece behind the tail
+						inFront = getAdjacentPiece(oldX, oldY, direction);// get the piece behind the tail
 					}
-					int newX = getAdjacentCoordinate(oldX, direction, true);//get the location in front of the head or tail
+					int newX = getAdjacentCoordinate(oldX, direction, true);// get the location in front of the head or
+																			// tail
 					int newY = getAdjacentCoordinate(oldY, direction, false);
-					
-					//while the space in front is empty and the count is not exceeded and the location of the piece in front is on the board
+
+					// while the space in front is empty and the count is not exceeded and the
+					// location of the piece in front is on the board
 					while (inFront == null && count > 0 && checkOnBoard(newX, newY)) {
-						inFront = getAdjacentPiece(newX, newY, direction);//get the new piece in front
-						newX = getAdjacentCoordinate(newX, direction, true);//increment the location in that direction
+						inFront = getAdjacentPiece(newX, newY, direction);// get the new piece in front
+						newX = getAdjacentCoordinate(newX, direction, true);// increment the location in that direction
 						newY = getAdjacentCoordinate(newY, direction, false);
-						count--;//decrement the count.
+						count--;// decrement the count.
 					}
-					if (!checkOnBoard(newX, newY)) {//if the final destination is off the board return false.
+					if (!checkOnBoard(newX, newY)) {// if the final destination is off the board return false.
 						return false;
-					} else if (inFront != null) {//if the final destination already has a piece return false.
+					} else if (inFront != null) {// if the final destination already has a piece return false.
 						return false;
-					} else if (inFront == null && count == 0) {//if the number of spaces is reached and the space is empty.
+					} else if (inFront == null && count == 0) {// if the number of spaces is reached and the space is
+																// empty.
 						FoxBit tempBehind;
-						if (direction == fox.getAxisForward()) {//if the fox is moving forward
-							board[newY][newX] = fox.getHead();//set the final destination cell to the head
-							tempBehind = fox.getHead().getBehind();//set the temp behind to be the neck
-						} else {//if the fox is moving backwards
-							board[newY][newX] = fox.getHead().getTail();//set the final destination cell to the tail
-							tempBehind = fox.getHead().getTail().getAhead();//set the temp behind to be the butt. 
+						if (direction == fox.getAxisForward()) {// if the fox is moving forward
+							board[newY][newX] = fox.getHead();// set the final destination cell to the head
+							tempBehind = fox.getHead().getBehind();// set the temp behind to be the neck
+						} else {// if the fox is moving backwards
+							board[newY][newX] = fox.getHead().getTail();// set the final destination cell to the tail
+							tempBehind = fox.getHead().getTail().getAhead();// set the temp behind to be the butt.
 						}
-						removePieceAt(oldX, oldY);//remove the tail or the head from the old position
-						int newXBehind = getAdjacentCoordinate(newX, direction.getOppositeDirection(), true);//get the location of the new neck or butt
+						removePieceAt(oldX, oldY);// remove the tail or the head from the old position
+						int newXBehind = getAdjacentCoordinate(newX, direction.getOppositeDirection(), true);// get the
+																												// location
+																												// of
+																												// the
+																												// new
+																												// neck
+																												// or
+																												// butt
 						int newYBehind = getAdjacentCoordinate(newY, direction.getOppositeDirection(), false);
-						int oldXBehind = getAdjacentCoordinate(oldX, direction.getOppositeDirection(), true);//get the location of the old neck or butt
+						int oldXBehind = getAdjacentCoordinate(oldX, direction.getOppositeDirection(), true);// get the
+																												// location
+																												// of
+																												// the
+																												// old
+																												// neck
+																												// or
+																												// butt
 						int oldYBehind = getAdjacentCoordinate(oldY, direction.getOppositeDirection(), false);
 
-						while (tempBehind != null) {//while not at the tail or head
+						while (tempBehind != null) {// while not at the tail or head
 
-							board[newYBehind][newXBehind] = tempBehind;//add the temp behind to the new location.
-							removePieceAt(oldXBehind, oldYBehind);//remove it from the old location.
+							board[newYBehind][newXBehind] = tempBehind;// add the temp behind to the new location.
+							removePieceAt(oldXBehind, oldYBehind);// remove it from the old location.
 
-							newX = getAdjacentCoordinate(newX, direction.getOppositeDirection(), true);//store the location of the piece just moved.
+							newX = getAdjacentCoordinate(newX, direction.getOppositeDirection(), true);// store the
+																										// location of
+																										// the piece
+																										// just moved.
 							newY = getAdjacentCoordinate(newY, direction.getOppositeDirection(), false);
-							newXBehind = getAdjacentCoordinate(newX, direction.getOppositeDirection(), true);//get the destination of the next piece to be moved.
+							newXBehind = getAdjacentCoordinate(newX, direction.getOppositeDirection(), true);// get the
+																												// destination
+																												// of
+																												// the
+																												// next
+																												// piece
+																												// to be
+																												// moved.
 							newYBehind = getAdjacentCoordinate(newY, direction.getOppositeDirection(), false);
-							oldXBehind = getAdjacentCoordinate(oldXBehind, direction.getOppositeDirection(), true);//get the location of the next piece to be moved.
+							oldXBehind = getAdjacentCoordinate(oldXBehind, direction.getOppositeDirection(), true);// get
+																													// the
+																													// location
+																													// of
+																													// the
+																													// next
+																													// piece
+																													// to
+																													// be
+																													// moved.
 							oldYBehind = getAdjacentCoordinate(oldYBehind, direction.getOppositeDirection(), false);
 
-							if (direction == fox.getAxisForward()) {//if going forwards increment towards the tail.
+							if (direction == fox.getAxisForward()) {// if going forwards increment towards the tail.
 								tempBehind = tempBehind.getBehind();
 							} else {
-								tempBehind = tempBehind.getAhead();//if going backwards increment towards the head.
+								tempBehind = tempBehind.getAhead();// if going backwards increment towards the head.
 							}
 						}
 					}
 
-				} else {//if the direction is not in the axis of the foxes movement return false.
+				} else {// if the direction is not in the axis of the foxes movement return false.
 					return false;
 				}
 			}
