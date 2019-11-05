@@ -80,6 +80,10 @@ public class Board {
 			return true;
 		} else if (board[x][y] instanceof Hole && (piece instanceof Rabbit ||piece instanceof Mushroom)) {// if the piece at the coordinates is a hole and the piece being added is a rabbit.
 			Hole container = (Hole) board[x][y];
+			if(piece instanceof Rabbit) {
+				Rabbit pieceR = (Rabbit) piece; //evil casting to Rabbit so the Rabbit can be properly be putInHole()
+				pieceR.jumpInHole();
+			}
 			return container.putIn(piece);// try adding the rabbit to the hole and return the result.
 		} else if (piece instanceof Fox){//if piece being added is a fox.
 			Fox fox = (Fox) piece;//cast piece to a new fox object to avoid repetition.
