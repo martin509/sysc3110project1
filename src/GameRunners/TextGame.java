@@ -6,14 +6,14 @@ import GameInternal.*;
 public class TextGame {
 	private Game game;
 	public static void main(String[] args) {
-		Game game1 = new Game(5, 5);
+		/*Game game1 = new Game(5, 5);
 		game1.addPiece(1, 1, PieceType.RABBIT);
 		game1.addPiece(1, 2, PieceType.MUSHROOM);
 		game1.addPiece(1, 3, PieceType.HOLE);
 		TextGame theGame = new TextGame(game1);
 		while(true) {
 			theGame.execute();
-		}
+		}*/
 		
 		
 	}
@@ -26,8 +26,8 @@ public class TextGame {
 	 * The basic execution loop for the game. Takes a command, prints resulting board.
 	 */
 	private void execute() {
-		Command cmd = new Command(game);
-		System.out.println(boardToText(cmd.execute()));
+		//Command cmd = new Command(game);
+		//System.out.println(boardToText(cmd.execute()));
 	}
 	/**
 	 * Returns the board in text form.
@@ -53,10 +53,10 @@ public class TextGame {
 	
 	private String readPieceType(PieceType type) {
 		String out = "";
-		ArrayList<GamePiece> pieces = game.getPiecesOfType(type);
-		for(GamePiece p: pieces) {
-			out += p.getID() + " (" + p.getX() + ", " + p.getY() + ")\n";
-		}
+		//ArrayList<GamePiece> pieces = game.getPiecesOfType(type);
+		//for(GamePiece p: pieces) {
+			//out += p.getID() + " (" + p.getX() + ", " + p.getY() + ")\n";
+		//}
 		return out;
 	}
 }

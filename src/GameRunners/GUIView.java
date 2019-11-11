@@ -32,13 +32,13 @@ public class GUIView extends JFrame {
 		this.width = 0;
 		setResizable(false);
 
-		// Set the top menu bar with game text.
+		// Set the top menu bar with game text
 		gameStatus = new JPanel();
 		txtStatus = new JLabel("This will hold move instructions and game status");
 		gameStatus.add(txtStatus);
 		add(gameStatus, BorderLayout.NORTH);
 
-		// Set the bottom menu bar, which has game options like "cancel turn".
+		// Set the bottom menu bar, which has game options like "cancel move".
 		options = new JPanel();
 		btnCancel = new JButton("Cancel Move");
 		btnCancel.setEnabled(false);
@@ -54,7 +54,7 @@ public class GUIView extends JFrame {
 	 * @parem boardHeight
 	 * @parem listener
 	 */
-	public void newBoard(int boardWidth, int boardHeight, ActionListener listener) {
+	public void newBoard(int boardWidth, int boardHeight, ActionListener listenGridButton) {
 		// Holds the board width and height
 		width = boardWidth;
 		height = boardHeight;
@@ -68,7 +68,7 @@ public class GUIView extends JFrame {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				buttons[x][y] = new JButton();
-				buttons[x][y].addActionListener(listener);
+				buttons[x][y].addActionListener(listenGridButton);
 				grid.add(buttons[x][y]);
 			}
 		}
@@ -137,5 +137,30 @@ public class GUIView extends JFrame {
 		}
 
 		return null;
+	}
+	/**]
+	 * @author Andrew this method is for giving the cancel button an action listener
+	 * @param listenForCancelButton
+	 */
+	public void addCancelListener(ActionListener listenForCancelButton) {
+		
+		btnCancel.addActionListener(listenForCancelButton);
+	}
+	/**
+	 * @author Andrew 
+	 * this is how the controller disables and enables the cancel button
+	 * @param set
+	 */
+	public void setCancelButton(boolean set) {
+		btnCancel.setEnabled(set);
+	}
+	
+	/**
+	 * @author Andrew
+	 * this changes the text that guides the player
+	 * @param set
+	 */
+	public void setText(String set) {
+		txtStatus.setText(set);
 	}
 }
