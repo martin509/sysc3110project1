@@ -2,6 +2,7 @@ package GameInternal;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Observable;
 
 /**
  * Class Board serves as a container for all the GamePieces in the game and
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  * 
  * @author James Horner
  */
-public class Board {
+public class Board extends Observable {
 
 	private GamePiece[][] board;
 	protected int boardWidth;
@@ -40,6 +41,13 @@ public class Board {
 				if (board[i][j] != null) {
 					if (board[i][j].equals(piece)) {// until a piece matching the piece provided is found.
 						return new Point(j, i);
+					} else if (board[i][j] instanceof ContainerPiece) {
+						ContainerPiece temp = (ContainerPiece)board[i][j];
+						if(!(temp.isEmpty())){
+							if(temp.check().equals(piece)) {
+								return new Point(j,i);
+							}
+						}
 					}
 				}
 			}
@@ -106,7 +114,7 @@ public class Board {
 		} else if (piece instanceof Fox) {// if piece being added is a fox.
 			Fox fox = (Fox) piece;// cast piece to a new fox object to avoid repetition.
 			Point tailPos = p;// set the location to the head.
-			for (int i = fox.getLength(); i > 0; i--) {// iterate over the FoxBits to find the location of the tail.
+			for (int i = fox.getLength()-1; i > 0; i--) {// iterate over the FoxBits to find the location of the tail.
 				if (getPieceAt(tailPos) != null) {// if any of the body pieces would overwrite another piece
 					return false;// return unsuccessful.
 				}
@@ -156,41 +164,48 @@ public class Board {
 	 */
 	public boolean move(MovablePiece piece, DIRECTION direction, int numSpaces) {
 		if (piece instanceof Rabbit) {// if the piece is a rabbit
-			Point oldLoc = getLocation(piece);
+			Rabbit rabbit = (Rabbit) piece;
+			Point oldLoc = getLocation(rabbit);
 			if (!checkOnBoard(oldLoc)) {// check if the location is valid
 				return false;
 			} else {
-				GamePiece inFront = getAdjacentPiece(oldLoc, direction);// get the piece beside the rabbit in the
+				GamePiece inFront = getAdjacentPiece(oldLoc, direction);// get the rabbit beside the rabbit in the
 																		// specified direction.
-				if (inFront == null || inFront instanceof ContainerPiece) {// cannot jump to an immediately adjacent
-																			// empty space or hole.
+				if (inFront == null) {// cannot jump to an immediately adjacent empty space.
 					return false;
-				} else {// if not beside an empty space or hole.
-					Point newLoc = getAdjacentCoordinate(oldLoc, direction);// keep track of the current coordinates of
-																			// the adjacent piece.
-					// iterate through the adjacent pieces until a hole or empty space is reached or
-					// the piece being checked is off the board.
-					while (!(inFront instanceof ContainerPiece) && checkOnBoard(newLoc) && inFront != null) {
-						inFront = getAdjacentPiece(newLoc, direction);
-						newLoc = getAdjacentCoordinate(newLoc, direction);
-					}
-
-					if (!checkOnBoard(newLoc)) {// if the piece being check is off the board
-						return false;
-					} else if (inFront instanceof ContainerPiece) {// if the piece being checked is a hole
-						ContainerPiece destination = (ContainerPiece) inFront;
-						if (destination.putIn(piece)) {// try adding the rabbit to the hole.
-							((Rabbit) piece).jumpInHole();
-							removePieceAt(oldLoc);
-							return true;
-						} else {
-							return false;
+				} else {// if not beside an empty space.
+					if (inFront instanceof ContainerPiece) {// Check if inFront is a ContainerPiece
+						if (((ContainerPiece) inFront).isEmpty()) {
+							return false;// If it is and it is empty return false.
 						}
-					} else if (inFront == null && checkOnBoard(newLoc)) {// if the space is empty
-						board[newLoc.y][newLoc.x] = piece;// add the rabbit to the empty space.
-						removePieceAt(oldLoc);
-						return true;
 					}
+					// keep track of the current coordinates of the adjacent rabbit.
+					Point newLoc = getAdjacentCoordinate(oldLoc, direction);
+					// iterate through the adjacent pieces until an empty space is reached, or
+					// the rabbit being checked is off the board, or the rabbit cannot be jumped.
+					while (checkOnBoard(newLoc) && inFront != null && inFront.canBeJumped()) {
+						newLoc = getAdjacentCoordinate(newLoc, direction);
+						inFront = getPieceAt(newLoc);
+					}
+					if (!checkOnBoard(newLoc)) {// if the rabbit being check is off the board
+						return false;
+					} else if (inFront == null && checkOnBoard(newLoc)) {// if the space is empty
+						board[newLoc.y][newLoc.x] = rabbit;// add the rabbit to the empty space.
+						removePieceAt(oldLoc);
+						notifyObservers(new MoveEvent(rabbit, direction, numSpaces));
+						return true;
+					} else if (!inFront.canBeJumped()) {// if the rabbit being checked cannot be jumped.
+						if (inFront instanceof ContainerPiece) {// check if the rabbit is a container
+							ContainerPiece destination = (ContainerPiece) inFront;
+							if (destination.putIn(rabbit)) {// try adding the rabbit to the hole.
+								rabbit.jumpInHole();
+								removePieceAt(oldLoc);
+								notifyObservers(new MoveEvent(rabbit, direction, numSpaces));
+								return true;
+							}
+						}
+					}
+					return false;
 				}
 			}
 		} else if (piece instanceof Fox) {// if the piece being moved is a fox.
@@ -209,7 +224,7 @@ public class Board {
 						inFront = getAdjacentPiece(oldLoc, direction);// get the piece behind the tail
 					}
 					Point newLoc = oldLoc;// get the location in front of the head or
-																			// tail
+											// tail
 					// while the space in front is empty and the count is not exceeded and the
 					// location of the piece in front is on the board
 					while (inFront == null && count > 0 && checkOnBoard(newLoc)) {
@@ -254,6 +269,7 @@ public class Board {
 								tempBehind = tempBehind.getAhead();// if going backwards increment towards the head.
 							}
 						}
+						notifyObservers(new MoveEvent(fox, direction, numSpaces));
 						return true;
 					}
 
@@ -278,9 +294,9 @@ public class Board {
 	private Point getAdjacentCoordinate(Point p, DIRECTION direction) {
 		switch (direction) {
 		case NORTH:
-			return new Point(p.x, p.y + 1);
-		case SOUTH:
 			return new Point(p.x, p.y - 1);
+		case SOUTH:
+			return new Point(p.x, p.y + 1);
 		case EAST:
 			return new Point(p.x + 1, p.y);
 		case WEST:
@@ -301,9 +317,9 @@ public class Board {
 	private GamePiece getAdjacentPiece(Point p, DIRECTION direction) {
 		switch (direction) {
 		case NORTH:
-			return getPieceAt(new Point(p.x, p.y + 1));
-		case SOUTH:
 			return getPieceAt(new Point(p.x, p.y - 1));
+		case SOUTH:
+			return getPieceAt(new Point(p.x, p.y + 1));
 		case EAST:
 			return getPieceAt(new Point(p.x + 1, p.y));
 		case WEST:

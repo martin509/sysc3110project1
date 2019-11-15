@@ -55,11 +55,11 @@ class Test_Pieces {
 	
 	@Test
 	void testContainer() {
-		assertEquals(true, hole1.canEnter(), "Container initial canEnter() didn't return true.");
+		assertEquals(true, hole1.isEmpty(), "Container initial canEnter() didn't return true.");
 		assertEquals(true, hole1.putIn(rabb1), "Container putIn() didn't return true.");
-		assertEquals(false, hole1.canEnter(), "Container second canEnter() didn't return false.");
+		assertEquals(false, hole1.isEmpty(), "Container second canEnter() didn't return false.");
 		assertEquals(rabb1, hole1.check(), "Container check() didn't return correct Piece.");
 		assertEquals(rabb1, hole1.takeOut(), "Container takeOut() didn't return correct Piece.");
-		assertEquals(true, hole1.canEnter(), "Container final canEnter didn't return true.");
+		assertEquals(true, hole1.isEmpty(), "Container final canEnter didn't return true.");
 	}
 }

@@ -14,7 +14,7 @@ public class Fox extends MovablePiece {
     public Fox(int length, DIRECTION axisForward) {
         super();
         this.axisForward = axisForward;
-        axisBackward = axisForward.getOppositeDirection();
+        this.axisBackward = axisForward.getOppositeDirection();
         this.length = length;
         
         //Based on the value of length the fox is initialized with FoxBits.

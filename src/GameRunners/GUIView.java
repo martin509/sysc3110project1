@@ -97,7 +97,7 @@ public class GUIView extends JFrame {
 						buttons[x][y].setText("H");
 					} else if (board[x][y] instanceof Hole) {
 						// For holes, have a separate display for empty and full holes.
-						if (((Hole) board[x][y]).canEnter()) {
+						if (((Hole) board[x][y]).isEmpty()) {
 							buttons[x][y].setText("( )");
 						} else {
 							buttons[x][y].setText("(R)");
