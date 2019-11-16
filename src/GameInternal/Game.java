@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Stack;
+import java.util.concurrent.*;
 
 public class Game extends Board implements Observer {
 
@@ -18,7 +19,7 @@ public class Game extends Board implements Observer {
 	 *         are no rabbits.
 	 */
 	public boolean isGameWon() {
-		ArrayList<GamePiece> rabbits = getPiecesOfType(new Rabbit());
+		ArrayList<GamePiece> rabbits = getPiecesOfType(Rabbit.class);
 		for (GamePiece r : rabbits) {
 			if (!((Rabbit) r).isInHole()) {
 				return false;
@@ -86,8 +87,8 @@ public class Game extends Board implements Observer {
 	 * @param piece GamePiece used to identify the type of piece being requested.
 	 * @return ArrayList of all the pieces found on the board of the specified type.
 	 */
-	public ArrayList<GamePiece> getPiecesOfType(GamePiece piece) {
-		if (piece == null) {
+	public ArrayList<GamePiece> getPiecesOfType(Class<?> c) {
+		if (c == null) {
 			return null;
 		}
 		ArrayList<GamePiece> pieces = new ArrayList<GamePiece>();
@@ -97,13 +98,13 @@ public class Game extends Board implements Observer {
 			for (int j = 0; j < boardHeight; j++) {// iterate through board
 				p.x = j;
 				if (getPieceAt(p) != null) {
-					if (getPieceAt(p).getClass().equals(piece.getClass())) {// check if piece at location has the same
-																			// class.
+					if (getPieceAt(p).getClass().equals(c)) {// check if piece at location has the same
+																// class.
 						pieces.add(getPieceAt(p));// if it does add it to the array
 					} else if (getPieceAt(p) instanceof ContainerPiece) {// if the piece is a ContainerPiece
 						ContainerPiece cont = (ContainerPiece) getPieceAt(p);
 						if (cont.check() != null) {
-							if (cont.check().getClass().equals(piece.getClass())) {// check the contents
+							if (cont.check().getClass().equals(c)) {// check the contents
 								pieces.add(cont.check());// add to the array if it matches the class
 							}
 						}
@@ -127,7 +128,23 @@ public class Game extends Board implements Observer {
 	public void undo() {
 		if (!undoStack.isEmpty()) {
 			MoveEvent e = undoStack.pop();
-			move(e.getPiece(), e.getDirection().getOppositeDirection(), e.getNumSpaces());
+			GamePiece dest = getPieceAt(e.getDestinationLocation());
+			if (dest instanceof ContainerPiece) {
+				((ContainerPiece) dest).takeOut();
+				addPiece(e.getSourceLocation(), e.getPiece());
+			} else if (e.getPiece() instanceof Fox) {
+				FoxBit head = ((Fox) e.getPiece()).getHead();
+				Point headLoc = getLocation(head);
+				for (int i = 0; i < head.getFox().getLength(); i++) {
+					removePieceAt(headLoc);
+					headLoc = getAdjacentCoordinate(headLoc, head.getFox().getAxisBackward());
+					head = head.getBehind();
+				}
+				addPiece(e.getSourceLocation(), e.getPiece());
+			} else {
+				removePieceAt(e.getDestinationLocation());
+				addPiece(e.getSourceLocation(), e.getPiece());
+			}
 			redoStack.push(e);
 		}
 	}
@@ -138,8 +155,42 @@ public class Game extends Board implements Observer {
 	public void redo() {
 		if (!redoStack.isEmpty()) {
 			MoveEvent e = redoStack.pop();
-			move(e.getPiece(), e.getDirection(), e.getNumSpaces());
+			move(e.getPiece(), e.getDestinationLocation());
 			undoStack.push(e);
+		}
+	}
+
+	private ArrayList<ArrayList<MoveEvent>> getAllValidPieceMoves() {
+		ArrayList<GamePiece> pieces = getPiecesOfType(MovablePiece.class);
+		ArrayList<ArrayList<MoveEvent>> pieceMoves = new ArrayList<ArrayList<MoveEvent>>();
+		if (!pieces.isEmpty()) {
+			for (GamePiece p : pieces) {
+				pieceMoves.add(getValidMoves((MovablePiece) p));
+			}
+		}
+		return pieceMoves;
+	}
+
+	private ArrayList<MoveEvent> getValidMoves(MovablePiece piece) {
+		if (piece == null) {
+			return null;
+		} else {
+			Point sourceLoc = getLocation(piece);
+			Point testLoc = sourceLoc;
+			ArrayList<MoveEvent> moves = new ArrayList<MoveEvent>();
+
+			if (checkOnBoard(sourceLoc)) {
+				for (DIRECTION d : DIRECTION.values()) {
+					testLoc = sourceLoc;
+					while (checkOnBoard(testLoc)) {
+						if (isMoveValid(piece, sourceLoc, testLoc)) {
+							moves.add(new MoveEvent(piece, sourceLoc, testLoc));
+						}
+						testLoc = getAdjacentCoordinate(testLoc, d);
+					}
+				}
+			}
+			return moves;
 		}
 	}
 

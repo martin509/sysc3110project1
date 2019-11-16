@@ -1,5 +1,6 @@
 package GameInternal;
 
+import java.awt.Point;
 
 /**
  * @author James Horner
@@ -7,19 +8,19 @@ package GameInternal;
  */
 public class MoveEvent {
 	private final MovablePiece piece;
-	private final DIRECTION direction;
-	private final int numSpaces;
+	private final Point sourceLocation;
+	private final Point destinationLocation;
 	
 	/**
 	 * 
 	 * @param piece
-	 * @param direction
-	 * @param numSpaces
+	 * @param sourceLocation
+	 * @param destinationLocation
 	 */
-	public MoveEvent(MovablePiece piece, DIRECTION direction, int numSpaces) {
+	public MoveEvent(MovablePiece piece, Point sourceLocation, Point destinationLocation) {
 		this.piece = piece;
-		this.direction = direction;
-		this.numSpaces = numSpaces;
+		this.sourceLocation = sourceLocation;
+		this.destinationLocation = destinationLocation;
 	}
 	/**
 	 * @return GamePiece for the piece that was moved.
@@ -31,17 +32,17 @@ public class MoveEvent {
 	
 	/**
 	 * 
-	 * @return DIRECTION in which the piece was moved.
+	 * @return Point from which the piece was moved.
 	 */
-	public DIRECTION getDirection() {
-		return direction;
+	public Point getSourceLocation() {
+		return sourceLocation;
 	}
 	
 	/**
 	 * 
-	 * @return int for the number of spaces the piece was moved.
+	 * @return Point for the destination the piece was moved to.
 	 */
-	public int getNumSpaces() {
-		return numSpaces;
+	public Point getDestinationLocation() {
+		return destinationLocation;
 	}
 }
