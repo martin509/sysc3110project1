@@ -10,8 +10,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import GameInternal.ContainerPiece;
 import GameInternal.Fox;
 import GameInternal.FoxBit;
+import GameInternal.Game;
 import GameInternal.GamePiece;
 import GameInternal.Hill;
 import GameInternal.Hole;
@@ -80,31 +82,29 @@ public class GUIView extends JFrame {
 	 * @author Michael Update the display of the board.
 	 * @param board
 	 */
-	public void updateBoard(GamePiece[][] board) {
+	public void updateBoard(Game board) {
 		if (board == null)
 			throw new NullPointerException();
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				buttons[x][y].setEnabled(board[x][y] != null);
+				buttons[x][y].setEnabled(board.getPieceAt(new Point(x,y))!= null);
 
-				if (board[x][y] != null) { // Update the display of each grid for what piece it should be.
-					if (board[x][y] instanceof Fox) {
+				if (board.getPieceAt(new Point(x,y)) != null) { // Update the display of each grid for what piece it should be.
+					if (board.getPieceAt(new Point(x,y)) instanceof FoxBit) {
 						buttons[x][y].setText("FBit");
-					} else if (board[x][y] instanceof FoxBit) {
+					} else if (board.getPieceAt(new Point(x,y)) instanceof Fox) {
 						buttons[x][y].setText("F");
-					} else if (board[x][y] instanceof Hill) {
-						buttons[x][y].setText("H");
-					} else if (board[x][y] instanceof Hole) {
+					} else if (board.getPieceAt(new Point(x,y)) instanceof ContainerPiece) {
 						// For holes, have a separate display for empty and full holes.
-						if (((Hole) board[x][y]).isEmpty()) {
+						if (((ContainerPiece) board.getPieceAt(new Point(x,y))).isEmpty()) {
 							buttons[x][y].setText("( )");
 						} else {
-							buttons[x][y].setText("(R)");
+							buttons[x][y].setText("(O)");
 						}
-					} else if (board[x][y] instanceof Mushroom) {
+					} else if (board.getPieceAt(new Point(x,y)) instanceof Mushroom) {
 						buttons[x][y].setText("M");
-					} else if (board[x][y] instanceof Rabbit) {
+					} else if (board.getPieceAt(new Point(x,y)) instanceof Rabbit) {
 						buttons[x][y].setText("R");
 					}
 				}

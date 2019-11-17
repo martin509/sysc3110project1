@@ -19,6 +19,7 @@ import GameInternal.Hill;
 import GameInternal.Hole;
 import GameInternal.Mushroom;
 import GameInternal.Rabbit;
+import GameInternal.ContainerPiece;
 
 /**
  * 
@@ -40,8 +41,8 @@ public class Test_Game {
 		assertFalse(g1.isGameWon());
 		Rabbit r1 = (Rabbit) ((Hill) g1.getPieceAt(new Point(0, 2))).check();
 		Rabbit r2 = (Rabbit) ((Hill) g1.getPieceAt(new Point(2, 4))).check();
-		g1.move(r1, DIRECTION.SOUTH, 2);
-		g1.move(r2, DIRECTION.EAST, 2);
+		g1.move(r1, new Point(0, 4));
+		g1.move(r2, new Point(4, 4));
 		assertTrue(g1.isGameWon());
 	}
 
@@ -64,10 +65,21 @@ public class Test_Game {
 	
 	@Test
 	void testUndo() {
-		//TODO
+		Rabbit r1 = (Rabbit) ((Hill) g1.getPieceAt(new Point(0, 2))).check();
+		g1.move(r1, new Point(0, 4));
+		g1.undo();
+		assertEquals(((Hill) g1.getPieceAt(new Point(0, 2))).check(),r1);
+		assertTrue((((ContainerPiece) g1.getPieceAt(new Point(0,4))).isEmpty()));
 	}
 	@Test
 	void testRedo() {
-		//TODO
+		Rabbit r1 = (Rabbit) ((Hill) g1.getPieceAt(new Point(0, 2))).check();
+		g1.move(r1, new Point(0, 4));
+		g1.undo();
+		assertEquals(((Hill) g1.getPieceAt(new Point(0, 2))).check(),r1);
+		assertTrue((((ContainerPiece) g1.getPieceAt(new Point(0,4))).isEmpty()));
+		g1.redo();
+		assertFalse((((ContainerPiece) g1.getPieceAt(new Point(0,4))).isEmpty()));
+		assertNull(((Hill) g1.getPieceAt(new Point(0, 2))).check());
 	}
 }

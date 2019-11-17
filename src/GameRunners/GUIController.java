@@ -52,7 +52,7 @@ public class GUIController {
 		this.theView.newBoard(x, y, new GridListener());
 		this.theView.addCancelListener(new CancelListener());
 		this.theModel = new Game ();
-		this.theView.updateBoard(theModel.getBoard().getBoard());
+		this.theView.updateBoard(theModel);
 		
 		// non model/view stuff
 		isPieceSel = false;
@@ -83,35 +83,35 @@ public class GUIController {
 				//get end location and check if the piece is in line
 				endLocation = theView.getCoordinates((JButton)e.getSource()); // these are the co-ords of the end position of the selected piece
 				// find direction
-				if((endLocation.x != pieceToMove.x) && (endLocation.y == pieceToMove.y)) { // if the movement is left or right
-					
-					distance = Math.abs(endLocation.x - pieceToMove.x);
-					if(pieceToMove.x < endLocation.x) {
-						direction = DIRECTION.EAST;
-					} else {
-						direction = DIRECTION.WEST;
-					}
-					
-				} else if((endLocation.x == pieceToMove.x) && (endLocation.y != pieceToMove.y)) { // if movement is up or down
-					
-					distance = Math.abs(endLocation.y - pieceToMove.y);
-					if(pieceToMove.y < endLocation.y) {
-						direction = DIRECTION.SOUTH;
-					} else {
-						direction = DIRECTION.NORTH;
-					}
-				} else {
-					distance = 0; // if the endLocation is not a valid choice
-				}
+//				if((endLocation.x != pieceToMove.x) && (endLocation.y == pieceToMove.y)) { // if the movement is left or right
+//					
+//					distance = Math.abs(endLocation.x - pieceToMove.x);
+//					if(pieceToMove.x < endLocation.x) {
+//						direction = DIRECTION.EAST;
+//					} else {
+//						direction = DIRECTION.WEST;
+//					}
+//					
+//				} else if((endLocation.x == pieceToMove.x) && (endLocation.y != pieceToMove.y)) { // if movement is up or down
+//					
+//					distance = Math.abs(endLocation.y - pieceToMove.y);
+//					if(pieceToMove.y < endLocation.y) {
+//						direction = DIRECTION.SOUTH;
+//					} else {
+//						direction = DIRECTION.NORTH;
+//					}
+//				} else {
+//					distance = 0; // if the endLocation is not a valid choice
+//				}
 				//------------------------------------------------------------------------------------------
 				
 				if(distance !=0 ) { // if the endLocation is valid
-					if(theModel.getBoard().
-							move((MovablePiece)theModel.getBoard().getPieceAt(pieceToMove.x, pieceToMove.y), direction, distance)) {
+					if(theModel.
+							move((MovablePiece)theModel.getPieceAt(pieceToMove), endLocation)) {
 						// if the move can be made, move the piece
 						theView.setCancelButton(false);
 						isPieceSel = false;
-						theView.updateBoard(theModel.getBoard().getBoard());
+						theView.updateBoard(theModel);
 						theView.setText("Select a Fox or a Rabbit");
 					}
 				}	
@@ -119,8 +119,8 @@ public class GUIController {
 				
 				pieceToMove = theView.getCoordinates((JButton)e.getSource()); //this gets the co-ords of the piece that we want to move
 				
-				if((theModel.getBoard().getPieceAt(pieceToMove.x, pieceToMove.y) instanceof Fox) || 
-						(theModel.getBoard().getPieceAt(pieceToMove.x, pieceToMove.y) instanceof Rabbit)) { //is this piece movable?
+				if((theModel.getPieceAt(pieceToMove) instanceof Fox) || 
+						(theModel.getPieceAt(pieceToMove) instanceof Rabbit)) { //is this piece movable?
 					isPieceSel = true;
 					theView.setCancelButton(true);
 					theView.setText("Now select a position for the piece to move.");
