@@ -51,7 +51,7 @@ public class GUIController {
 		this.theView = theView;
 		this.theView.newBoard(x, y, new GridListener());
 		this.theView.addCancelListener(new CancelListener());
-		this.theModel = new Game ();
+		this.theModel = new Game (5,5);
 		this.theView.updateBoard(theModel);
 		
 		// non model/view stuff

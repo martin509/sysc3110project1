@@ -9,5 +9,4 @@ public abstract class MovablePiece extends GamePiece{
 		super();
 		movable = true;
 	}
-	
 }

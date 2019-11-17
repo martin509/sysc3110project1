@@ -50,4 +50,17 @@ public class Hill extends ContainerPiece {
 			return contains.canBeJumped();
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	public String toString() {
+		StringBuffer ret = new StringBuffer();
+		ret.append("<Hill>");
+		if(!isEmpty()) {
+			ret.append(contains.toString());
+		}
+		ret.append("</Hill>");
+		return ret.toString();
+	}
 }
