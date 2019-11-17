@@ -6,7 +6,6 @@ package GameInternal;
  */
 public class Hole extends ContainerPiece {
 	
-	private GamePiece contains;
 	// check ContainerPiece for method descriptions
 	public Hole() {
 		super();
@@ -18,7 +17,7 @@ public class Hole extends ContainerPiece {
 	 * @return boolean true if hole is empty, false otherwise.
 	 */
 	@Override
-	public boolean canEnter() {
+	public boolean isEmpty() {
 		if (contains == null) {
 			return true;
 		} else {

@@ -12,7 +12,7 @@ public class Hill extends ContainerPiece {
 	}
 
 	@Override
-	public boolean canEnter() {
+	public boolean isEmpty() {
 		if (contains == null) {
 			return true;
 		} else {
