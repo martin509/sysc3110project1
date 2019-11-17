@@ -24,4 +24,12 @@ public class Rabbit extends MovablePiece{
     public boolean canBeJumped() {
         return true;
     }    
+    
+    /**
+     * 
+     */
+	public String toString() {
+		return "<Rabbit></Rabbit>";
+	}
+
 }

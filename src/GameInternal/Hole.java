@@ -6,7 +6,6 @@ package GameInternal;
  */
 public class Hole extends ContainerPiece {
 	
-	private GamePiece contains;
 	// check ContainerPiece for method descriptions
 	public Hole() {
 		super();
@@ -18,7 +17,7 @@ public class Hole extends ContainerPiece {
 	 * @return boolean true if hole is empty, false otherwise.
 	 */
 	@Override
-	public boolean canEnter() {
+	public boolean isEmpty() {
 		if (contains == null) {
 			return true;
 		} else {
@@ -76,5 +75,19 @@ public class Hole extends ContainerPiece {
 	public boolean canBeMoved() {
 		return false;
 	}
+	
+	/**
+	 * 
+	 */
+	public String toString() {
+		StringBuffer ret = new StringBuffer();
+		ret.append("<Hole>");
+		if(!isEmpty()) {
+			ret.append(contains.toString());
+		}
+		ret.append("</Hole>");
+		return ret.toString();
+	}
+
 
 }

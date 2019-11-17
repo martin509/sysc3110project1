@@ -89,4 +89,10 @@ public class FoxBit extends GamePiece {
 	public boolean canBeJumped() {
 		return true;
 	}
+	
+	public String toString() {
+		StringBuffer ret = new StringBuffer();
+		ret.append("<FoxBit, parOfFox=" + partOfFox.toString() + "<FoxBit>");
+		return ret.toString();
+	}
 }

@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import GameInternal.Board;
@@ -18,6 +19,7 @@ import GameInternal.Hill;
 import GameInternal.Hole;
 import GameInternal.Mushroom;
 import GameInternal.Rabbit;
+import GameInternal.ContainerPiece;
 
 /**
  * 
@@ -27,41 +29,57 @@ import GameInternal.Rabbit;
 public class Test_Game {
 	Game g1;
 	Game g2;
-		
+
+	@BeforeEach
+	void setUp() {
+		g1 = new Game(5,5);
+		g2 = new Game(5,5);
+	}
 	@Test
 	void testIsGameWon() {
-		g1 = new Game();
+		//g1 = new Game();
 		assertFalse(g1.isGameWon());
-		Board board = g1.getBoard();
-		Rabbit r1 = (Rabbit)((Hill)board.getPieceAt(0, 2)).check();
-		Rabbit r2 = (Rabbit)((Hill)board.getPieceAt(2, 4)).check();
-		board.move(r1, DIRECTION.SOUTH, 2);
-		board.move(r2, DIRECTION.EAST, 2);
+		Rabbit r1 = (Rabbit) ((Hill) g1.getPieceAt(new Point(0, 2))).check();
+		Rabbit r2 = (Rabbit) ((Hill) g1.getPieceAt(new Point(2, 4))).check();
+		g1.move(r1, new Point(0,2), new Point(0, 4));
+		g1.move(r2, new Point(2,4), new Point(4, 4));
 		assertTrue(g1.isGameWon());
 	}
-	@Test
-	public void testGetBoard() {
-		g1 = new Game();
-		assertNotNull(g1.getBoard());
-	}
+
 	@Test
 	void testGame() {
-		g2 = new Game();
+		//g2 = new Game();
 		assertNotNull(g2);
-		assertNotNull(g2.getBoard());
-		Board board = g2.getBoard();
-		GamePiece[][] shouldContain = {{new Hole(), new FoxBit(null), new Hill(), null, new Hole()},
-				{null,new Fox(2,DIRECTION.SOUTH),null,null,null},
-				{new Hill(),null,new Hole(),null, new Hill()},
-				{new Mushroom(),null,null,new Fox(2,DIRECTION.NORTH),null},
-				{new Hole(), null, new Hill(), null, new Hole()}
-		};
-		for(int i = 0; i < 5; i++) {
-			for(int j = 0; j < 5; j++) {
-				if(board.getPieceAt(i, j)!=null)
-					assertEquals(board.getPieceAt(i, j).getClass(),shouldContain[j][i].getClass());
+		Class[][] shouldContain = { { Hole.class, null, Hill.class, null, Hole.class },
+				{ null, FoxBit.class, null, null, null },
+				{ Hill.class, FoxBit.class, Hole.class, null, Hill.class },
+				{ Mushroom.class, null, null, FoxBit.class, null },
+				{ Hole.class, null, Hill.class, FoxBit.class, Hole.class } };
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				if (g2.getPieceAt(new Point(j, i)) != null)
+					assertEquals(g2.getPieceAt(new Point(j, i)).getClass(), shouldContain[i][j]);
 			}
 		}
 	}
+	
+	@Test
+	void testUndo() {
+		Rabbit r1 = (Rabbit) ((Hill) g1.getPieceAt(new Point(0, 2))).check();
+		g1.move(r1, new Point(0,2), new Point(0, 4));
+		g1.undo();
+		assertEquals(((Hill) g1.getPieceAt(new Point(0, 2))).check(),r1);
+		assertTrue((((ContainerPiece) g1.getPieceAt(new Point(0,4))).isEmpty()));
+	}
+	@Test
+	void testRedo() {
+		Rabbit r1 = (Rabbit) ((Hill) g1.getPieceAt(new Point(0, 2))).check();
+		g1.move(r1, new Point(0,2), new Point(0, 4));
+		g1.undo();
+		assertEquals(((Hill) g1.getPieceAt(new Point(0, 2))).check(),r1);
+		assertTrue((((ContainerPiece) g1.getPieceAt(new Point(0,4))).isEmpty()));
+		g1.redo();
+		assertFalse((((ContainerPiece) g1.getPieceAt(new Point(0,4))).isEmpty()));
+		assertNull(((Hill) g1.getPieceAt(new Point(0, 2))).check());
+	}
 }
-

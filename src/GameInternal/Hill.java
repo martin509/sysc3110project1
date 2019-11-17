@@ -12,7 +12,7 @@ public class Hill extends ContainerPiece {
 	}
 
 	@Override
-	public boolean canEnter() {
+	public boolean isEmpty() {
 		if (contains == null) {
 			return true;
 		} else {
@@ -49,5 +49,18 @@ public class Hill extends ContainerPiece {
 		} else {
 			return contains.canBeJumped();
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	public String toString() {
+		StringBuffer ret = new StringBuffer();
+		ret.append("<Hill>");
+		if(!isEmpty()) {
+			ret.append(contains.toString());
+		}
+		ret.append("</Hill>");
+		return ret.toString();
 	}
 }
