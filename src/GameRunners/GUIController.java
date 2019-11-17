@@ -107,7 +107,7 @@ public class GUIController {
 				
 				if(distance !=0 ) { // if the endLocation is valid
 					if(theModel.
-							move((MovablePiece)theModel.getPieceAt(pieceToMove), endLocation)) {
+							move((MovablePiece)theModel.getPieceAt(pieceToMove), pieceToMove, endLocation)) {
 						// if the move can be made, move the piece
 						theView.setCancelButton(false);
 						isPieceSel = false;
