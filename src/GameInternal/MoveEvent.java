@@ -45,4 +45,8 @@ public class MoveEvent {
 	public Point getDestinationLocation() {
 		return destinationLocation;
 	}
+	
+	public String toString() {
+		return "Move " +  piece.toString() + " from " + sourceLocation + " to " + destinationLocation;
+	}
 }

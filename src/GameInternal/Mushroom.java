@@ -23,5 +23,12 @@ public class Mushroom extends GamePiece {
 	public boolean canBeMoved() {
 		return false;
 	}
+	
+	/**
+	 * 
+	 */
+	public String toString() {
+		return "<Mushroom></Mushroom>";
+	}
 
 }

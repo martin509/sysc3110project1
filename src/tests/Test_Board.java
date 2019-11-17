@@ -65,14 +65,14 @@ class Test_Board {
 		Rabbit rabb1 = new Rabbit();
 		board1.addPiece(new Point(0, 4), rabb1);
 		board1.addPiece(new Point(2, 2), rabb2);
-		assertFalse(board1.move(rabb2, new Point(1,2))); // test that you can't move in directions with nothing there
-		assertFalse(board1.move(rabb2, new Point(2,1)));
-		assertFalse(board1.move(rabb2, new Point(3,2)));
+		assertFalse(board1.move(rabb2, new Point(2,2), new Point(1,2))); // test that you can't move in directions with nothing there
+		assertFalse(board1.move(rabb2,new Point(2,2), new Point(2,1)));
+		assertFalse(board1.move(rabb2,new Point(2,2), new Point(3,2)));
 
-		assertFalse(board1.move(rabb2, new Point(2,3)));
-		assertTrue(board1.move(rabb2, new Point(2,4))); 
-		assertFalse(board1.move(rabb1, new Point(2,4))); 
-		assertTrue(board1.move(rabb1, new Point(3,4)));
+		assertFalse(board1.move(rabb2,new Point(2,2), new Point(2,3)));
+		assertTrue(board1.move(rabb2,new Point(2,2), new Point(2,4))); 
+		assertFalse(board1.move(rabb1,new Point(0,4), new Point(2,4))); 
+		assertTrue(board1.move(rabb1,new Point(0,4), new Point(3,4)));
 		assertEquals(board1.getPieceAt(new Point(3, 4)).getClass(), Rabbit.class);
 	}
 
@@ -81,8 +81,8 @@ class Test_Board {
 		Fox fox1 = new Fox(1, DIRECTION.WEST);
 		board1.addPiece(new Point(0, 0), fox1);
 		board1.addPiece(new Point(3, 0), new Hill());
-		assertTrue(board1.move(fox1, new Point(1,0)));
-		assertFalse(board1.move(fox1, new Point(4,0)));
+		assertTrue(board1.move(fox1,new Point(0,0), new Point(1,0)));
+		assertFalse(board1.move(fox1,new Point(1,0), new Point(4,0)));
 	}
 
 }

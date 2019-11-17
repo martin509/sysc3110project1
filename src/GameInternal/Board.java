@@ -36,20 +36,23 @@ public class Board extends Observable {
 	 * @return int for the coordinate of the piece or -1 if no piece is found.
 	 */
 	protected Point getLocation(GamePiece piece) {
-		for (int i = 0; i < boardWidth; i++) {
-			for (int j = 0; j < board[i].length; j++) {// iterate through the board.
-				if (board[i][j] != null) {
-					if (board[i][j].equals(piece)) {// until a piece matching the piece provided is found.
+		Point point = new Point(0,0);
+		for (int i = 0; i < boardHeight; i++) {
+			for (int j = 0; j < boardWidth; j++) {// iterate through the board.
+				point.x = j;
+				point.y = i;
+				if (getPieceAt(point) != null) {
+					if (getPieceAt(point).equals(piece)) {// until a piece matching the piece provided is found.
 						return new Point(j, i);
-					} else if (board[i][j] instanceof ContainerPiece) {
-						ContainerPiece temp = (ContainerPiece) board[i][j];
+					} else if (getPieceAt(point) instanceof ContainerPiece) {
+						ContainerPiece temp = (ContainerPiece) getPieceAt(point);
 						if (!(temp.isEmpty())) {
 							if (temp.check().equals(piece)) {
-								return new Point(j, i);
+								return point;
 							}
 						}
-					} else if (board[i][j] instanceof FoxBit) {
-						FoxBit temp = (FoxBit) board[i][j];
+					} else if (getPieceAt(point) instanceof FoxBit) {
+						FoxBit temp = (FoxBit) getPieceAt(point);
 						if (temp.getFox().equals(piece)) {
 							return getLocation(temp.getHead());
 						}
@@ -159,11 +162,18 @@ public class Board extends Observable {
 	 * @param destination Direction in which the piece is to be moved.
 	 * @return boolean for if the movement is successful.
 	 */
-	public boolean move(MovablePiece piece, Point destination) {
+	public boolean move(MovablePiece piece, Point start, Point destination) {
 		if (piece == null) {// Check that piece is not null.
 			return false;// If it is null it cannot be moved.
 		}
-		Point source = getLocation(piece);// Get the location of the piece to be moved.
+		Point source;
+		if (getLocation(piece) == null){
+			source = start;
+		} else if(!getLocation(piece).equals(start)) {
+			return false;
+		} else {
+			source = getLocation(piece);
+		}
 		DIRECTION direction = getDirectionFromPoint(source, destination);// Get the direction of the movement to happen.
 
 		if (!checkOnBoard(source) || direction == null) {// Check if the location and direction is valid.
@@ -303,7 +313,7 @@ public class Board extends Observable {
 	 * @return boolean true if x and y lie on the board, false otherwise.
 	 */
 	protected boolean checkOnBoard(Point p) {
-		if (p.x >= boardWidth || p.x < 0 || p.y >= boardHeight || p.y < 0) {
+		if (p == null || p.x >= boardWidth || p.x < 0 || p.y >= boardHeight || p.y < 0) {
 			return false;
 		} else {
 			return true;
@@ -354,6 +364,9 @@ public class Board extends Observable {
 	}
 
 	protected boolean isMoveValid(MovablePiece piece, Point source, Point destination) {
+		if(source == null || destination == null || source.equals(destination)) {
+			return false;
+		}
 		DIRECTION direction = getDirectionFromPoint(source, destination);// Get the direction of the movement to happen.
 		GamePiece inFront = getAdjacentPiece(source, direction);
 		if (!checkOnBoard(source) || direction == null) {// Check if the location and direction is valid.
@@ -423,5 +436,32 @@ public class Board extends Observable {
 			}
 		}
 		return false;
+	}
+	public String toString() {
+		StringBuffer ret = new StringBuffer();
+		Point point = new Point(0,0);
+		ret.append("<Board boardWidth=" + boardWidth + ", boardHeight=" + boardHeight + ">\n");
+		for (int i = 0; i < boardHeight; i++) {
+			for (int j = 0; j < boardWidth; j++) {// iterate through the board.
+				point.x = j;
+				point.y = i;
+				if (getPieceAt(point) != null) {
+					ret.append(getPieceAt(point).toString());
+				} else {
+					ret.append("<Empty></Empty>");
+				}
+			}
+			ret.append("\n");
+		}
+		ret.append("</Board>");
+		return ret.toString();
+	}
+
+	public int getBoardWidth() {
+		return boardWidth;
+	}
+
+	public int getBoardHeight() {
+		return boardHeight;
 	}
 }

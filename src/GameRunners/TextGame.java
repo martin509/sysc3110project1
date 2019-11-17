@@ -14,8 +14,13 @@ public class TextGame {
 		while(true) {
 			theGame.execute();
 		}*/
-		
-		
+		Game g1 = new Game(5,5);
+		System.out.println(g1.toString() + "\n\n");
+		ArrayList<Game> game = new ArrayList<Game>();
+		game.add(g1);
+		System.out.println(g1.containsWinningLeaf(game,g1) + "\n\n");
+		System.out.println(g1.getHint().toString() + "\n\n");
+
 	}
 	
 	private TextGame(Game game) {

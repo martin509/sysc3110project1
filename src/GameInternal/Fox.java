@@ -67,4 +67,12 @@ public class Fox extends MovablePiece {
     public boolean canBeJumped() {
         return true;
     }
+    
+    /**
+     * 
+     */
+    public String toString() {
+    	return "<Fox, axisForward=" + axisForward + ", length=" + length + "></Fox>";
+    }
+
 }

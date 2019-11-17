@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Scanner;
 import java.util.Stack;
 import java.util.concurrent.*;
 
@@ -34,8 +35,8 @@ public class Game extends Board implements Observer {
 	 * @param width
 	 * @param height
 	 */
-	public Game() {
-		super(5, 5);
+	public Game(int boardWidth, int boardHeight) {
+		super(boardWidth, boardHeight);
 		super.addObserver(this);
 		undoStack = new Stack<MoveEvent>();
 		redoStack = new Stack<MoveEvent>();
@@ -52,32 +53,6 @@ public class Game extends Board implements Observer {
 		for (int i = 0; i < pieces.length; i++) {
 			addPiece(locations[i], pieces[i]);
 		}
-//		int[] hillX = {0,2,2,4};
-//		int[] hillY = {2,0,4,2};
-//		for(int i=0 ; i < 4; i++) {
-//			addPiece(new Point(hillX[i],hillY[i]), new Hill());
-//		}
-//		int[] holeX = {0,4,2,0,4};
-//		int[] holeY = {0,0,2,4,4};
-//		for(int i=0 ; i < 5; i++) {
-//			addPiece(new Point(holeX[i],holeY[i]), new Hole());
-//		}
-//		int[] rabbitX = {0,2,2};
-//		int[] rabbitY = {2,2,4};
-//		for(int i=0 ; i < 3; i++) {
-//			addPiece(new Point(rabbitX[i],rabbitY[i]), new Rabbit());
-//		}
-//		int[] mushroomX = {0,2};
-//		int[] mushroomY = {3,0};
-//		for(int i=0 ; i < 2; i++) {
-//			addPiece(new Point(mushroomX[i],mushroomY[i]), new Mushroom());
-//		}
-//		int[] foxX = {1,3};
-//		int[] foxY = {2,3};
-//		DIRECTION[] foxD = {DIRECTION.SOUTH,DIRECTION.NORTH};
-//		for(int i=0 ; i < 2; i++) {
-//			addPiece(new Point(foxX[i],foxY[i]), new Fox(2,foxD[i]));
-//		}
 	}
 
 	/**
@@ -92,21 +67,26 @@ public class Game extends Board implements Observer {
 			return null;
 		}
 		ArrayList<GamePiece> pieces = new ArrayList<GamePiece>();
-		Point p = new Point();
-		for (int i = 0; i < boardWidth; i++) {
-			p.y = i;
-			for (int j = 0; j < boardHeight; j++) {// iterate through board
+		Point p = new Point(0,0);
+		for (int i = 0; i < boardHeight; i++) {
+			for (int j = 0; j < boardWidth; j++) {// iterate through board
+				p.y = i;
 				p.x = j;
 				if (getPieceAt(p) != null) {
-					if (getPieceAt(p).getClass().equals(c)) {// check if piece at location has the same
-																// class.
+					// check if piece at location has the same class.
+					if (c.isInstance(getPieceAt(p))) {
 						pieces.add(getPieceAt(p));// if it does add it to the array
 					} else if (getPieceAt(p) instanceof ContainerPiece) {// if the piece is a ContainerPiece
 						ContainerPiece cont = (ContainerPiece) getPieceAt(p);
 						if (cont.check() != null) {
-							if (cont.check().getClass().equals(c)) {// check the contents
+							if (c.isInstance(cont.check())) {// check the contents
 								pieces.add(cont.check());// add to the array if it matches the class
 							}
+						}
+					} else if((c.equals(MovablePiece.class) || c.equals(GamePiece.class)) && getPieceAt(p) instanceof FoxBit) {
+						Fox fox = ((FoxBit)getPieceAt(p)).getFox();
+						if(!pieces.contains(fox)) {
+							pieces.add(fox);
 						}
 					}
 				}
@@ -155,17 +135,17 @@ public class Game extends Board implements Observer {
 	public void redo() {
 		if (!redoStack.isEmpty()) {
 			MoveEvent e = redoStack.pop();
-			move(e.getPiece(), e.getDestinationLocation());
+			move(e.getPiece(), e.getSourceLocation(), e.getDestinationLocation());
 			undoStack.push(e);
 		}
 	}
 
-	private ArrayList<ArrayList<MoveEvent>> getAllValidPieceMoves() {
+	private ArrayList<MoveEvent> getAllValidPieceMoves() {
 		ArrayList<GamePiece> pieces = getPiecesOfType(MovablePiece.class);
-		ArrayList<ArrayList<MoveEvent>> pieceMoves = new ArrayList<ArrayList<MoveEvent>>();
+		ArrayList<MoveEvent> pieceMoves = new ArrayList<MoveEvent>();
 		if (!pieces.isEmpty()) {
 			for (GamePiece p : pieces) {
-				pieceMoves.add(getValidMoves((MovablePiece) p));
+				pieceMoves.addAll(getValidMoves((MovablePiece) p));
 			}
 		}
 		return pieceMoves;
@@ -178,7 +158,6 @@ public class Game extends Board implements Observer {
 			Point sourceLoc = getLocation(piece);
 			Point testLoc = sourceLoc;
 			ArrayList<MoveEvent> moves = new ArrayList<MoveEvent>();
-
 			if (checkOnBoard(sourceLoc)) {
 				for (DIRECTION d : DIRECTION.values()) {
 					testLoc = sourceLoc;
@@ -193,5 +172,55 @@ public class Game extends Board implements Observer {
 			return moves;
 		}
 	}
-
+	
+	public MoveEvent getHint() {
+		if(isGameWon()) {
+			return null;
+		}
+		ArrayList<MoveEvent> currentPossibleMoves = getAllValidPieceMoves();
+		ArrayList<Game> gameStatesChecked = new ArrayList<Game>();
+		gameStatesChecked.add(this);
+		for(MoveEvent e:currentPossibleMoves) {
+			Game futureGame = copyGame(this);
+			futureGame.move(e.getPiece(), e.getSourceLocation(), e.getDestinationLocation());
+			if(containsWinningLeaf(gameStatesChecked,futureGame)) {
+				return e;
+			}
+		}
+		return null;
+	}
+	public boolean containsWinningLeaf(ArrayList<Game> gameStatesChecked, Game g) {
+		if(g.isGameWon()) {
+			return true;
+		} else if(gameStatesChecked.contains(g)) {
+			return false;
+		} else {
+			ArrayList<MoveEvent> currentPossibleMoves = getAllValidPieceMoves();
+			for(MoveEvent e:currentPossibleMoves) {
+				Game futureGame = copyGame(g);
+				futureGame.move(e.getPiece(), e.getSourceLocation(), e.getDestinationLocation());
+				gameStatesChecked.add(futureGame);
+				if(containsWinningLeaf(gameStatesChecked, futureGame)) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+	public static Game copyGame(Game game) {
+		Game ret = new Game(game.getBoardWidth(),game.getBoardHeight());
+		Point p = new Point(0,0);
+		for (int i = 0; i < game.getBoardHeight(); i++) {
+			for (int j = 0; j < game.getBoardWidth(); j++) {// iterate through board
+				p.y = i;
+				p.x = j;
+				if (game.getPieceAt(p) != null) {
+					ret.addPiece(p, game.getPieceAt(p));
+				} else {
+					ret.addPiece(p, null);
+				}
+			}
+		}
+		return ret;
+	}
 }
