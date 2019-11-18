@@ -53,6 +53,8 @@ public class GUIController {
 		this.theView = theView;
 		this.theView.newBoard(x, y, new GridListener());
 		this.theView.addCancelListener(new CancelListener());
+		this.theView.addUndoListener(new UndoListener());
+		this.theView.addRedoListener(new RedoListener());
 		this.theModel = new Game(5, 5);
 
 		// non model/view stuff
@@ -61,7 +63,16 @@ public class GUIController {
 		endLocation = new Point();
 		theView.setText("Select a Fox or a Rabbit");
 
-		this.theView.updateBoard(theModel, isPieceSel);
+		update();
+	}
+
+	/**
+	 * Helper function for all the identical theView.updateBoard() calls.
+	 */
+	private void update() {
+		theView.updateBoard(theModel, isPieceSel);
+		theView.setUndoButton(theModel.canUndo());
+		theView.setRedoButton(theModel.canRedo());
 	}
 
 	class CancelListener implements ActionListener {
@@ -75,6 +86,36 @@ public class GUIController {
 
 		}
 
+	}
+
+	/**
+	 * @author Martin
+	 */
+	class UndoListener implements ActionListener {
+		// when the undo button is pressed
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			theModel.undo();
+			update();
+			theView.setUndoButton(theModel.canUndo());
+			theView.setText("Move undone!");
+
+		}
+	}
+
+	/**
+	 * @author Martin
+	 */
+	class RedoListener implements ActionListener {
+		// when the undo button is pressed
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			theModel.redo();
+			update();
+			theView.setRedoButton(theModel.canRedo());
+			theView.setText("Move redone!");
+
+		}
 	}
 
 	class GridListener implements ActionListener {
@@ -91,22 +132,20 @@ public class GUIController {
 					// if the move can be made, move the piece
 					theView.setCancelButton(false);
 					isPieceSel = false;
-					theView.updateBoard(theModel, isPieceSel);
 					theView.setText("Select a Fox or a Rabbit");
 				} else {
 					// if the move can't be made
 					isPieceSel = false;
-					theView.updateBoard(theModel, isPieceSel);
 					theView.setText("Move couldn't be made, select new piece");
 					theView.setCancelButton(false);
 				}
-
+				update();
 				if (distance != 0) { // if the endLocation is valid
 					if (theModel.move((MovablePiece) theModel.getPieceAt(pieceToMove), pieceToMove, endLocation)) {
 						// if the move can be made, move the piece
 						theView.setCancelButton(false);
 						isPieceSel = false;
-						theView.updateBoard(theModel, isPieceSel);
+						update();
 						theView.setText("Select a Fox or a Rabbit");
 					}
 				}
@@ -116,7 +155,7 @@ public class GUIController {
 
 				if ((theModel.getPieceAt(pieceToMove) instanceof Fox) || (theModel.getPieceAtAdvanced(pieceToMove) instanceof Rabbit)) { // is this piece movable?
 					isPieceSel = true;
-					theView.updateBoard(theModel, isPieceSel);
+					update();
 					theView.setCancelButton(true);
 					theView.setText("Now select a position for the piece to move.");
 				}
