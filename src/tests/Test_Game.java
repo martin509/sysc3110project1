@@ -32,8 +32,8 @@ public class Test_Game {
 
 	@BeforeEach
 	void setUp() {
-		g1 = new Game();
-		g2 = new Game();
+		g1 = new Game(5,5);
+		g2 = new Game(5,5);
 	}
 	@Test
 	void testIsGameWon() {
@@ -41,8 +41,8 @@ public class Test_Game {
 		assertFalse(g1.isGameWon());
 		Rabbit r1 = (Rabbit) ((Hill) g1.getPieceAt(new Point(0, 2))).check();
 		Rabbit r2 = (Rabbit) ((Hill) g1.getPieceAt(new Point(2, 4))).check();
-		g1.move(r1, new Point(0, 4));
-		g1.move(r2, new Point(4, 4));
+		g1.move(r1, new Point(0,2), new Point(0, 4));
+		g1.move(r2, new Point(2,4), new Point(4, 4));
 		assertTrue(g1.isGameWon());
 	}
 
@@ -66,7 +66,7 @@ public class Test_Game {
 	@Test
 	void testUndo() {
 		Rabbit r1 = (Rabbit) ((Hill) g1.getPieceAt(new Point(0, 2))).check();
-		g1.move(r1, new Point(0, 4));
+		g1.move(r1, new Point(0,2), new Point(0, 4));
 		g1.undo();
 		assertEquals(((Hill) g1.getPieceAt(new Point(0, 2))).check(),r1);
 		assertTrue((((ContainerPiece) g1.getPieceAt(new Point(0,4))).isEmpty()));
@@ -74,7 +74,7 @@ public class Test_Game {
 	@Test
 	void testRedo() {
 		Rabbit r1 = (Rabbit) ((Hill) g1.getPieceAt(new Point(0, 2))).check();
-		g1.move(r1, new Point(0, 4));
+		g1.move(r1, new Point(0,2), new Point(0, 4));
 		g1.undo();
 		assertEquals(((Hill) g1.getPieceAt(new Point(0, 2))).check(),r1);
 		assertTrue((((ContainerPiece) g1.getPieceAt(new Point(0,4))).isEmpty()));

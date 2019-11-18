@@ -51,8 +51,7 @@ public class GUIController {
 		this.theView = theView;
 		this.theView.newBoard(x, y, new GridListener());
 		this.theView.addCancelListener(new CancelListener());
-		this.theModel = new Game ();
-		
+		this.theModel = new Game (5,5);
 		
 		// non model/view stuff
 		isPieceSel = false;
@@ -99,6 +98,17 @@ public class GUIController {
 					theView.setText("Move couldn't be made, select new piece");
 					theView.setCancelButton(false);
 				}
+				
+				if(distance !=0 ) { // if the endLocation is valid
+					if(theModel.
+							move((MovablePiece)theModel.getPieceAt(pieceToMove), pieceToMove, endLocation)) {
+						// if the move can be made, move the piece
+						theView.setCancelButton(false);
+						isPieceSel = false;
+						theView.updateBoard(theModel, isPieceSel);
+						theView.setText("Select a Fox or a Rabbit");
+					}
+				}	
 			} else { // if the no piece has been selected yet
 				
 				pieceToMove = theView.getCoordinates((JButton)e.getSource()); //this gets the co-ords of the piece that we want to move

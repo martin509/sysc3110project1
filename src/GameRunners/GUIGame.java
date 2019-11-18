@@ -13,7 +13,7 @@ public class GUIGame {
 	public static void main(String[] args) {
 
 		GUIView theView = new GUIView();
-		Game theModel = new Game();
+		Game theModel = new Game(5,5);
 		new GUIController(theModel, theView);
 		
 		theView.setVisible(true);

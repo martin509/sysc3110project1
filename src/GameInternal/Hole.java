@@ -75,5 +75,19 @@ public class Hole extends ContainerPiece {
 	public boolean canBeMoved() {
 		return false;
 	}
+	
+	/**
+	 * 
+	 */
+	public String toString() {
+		StringBuffer ret = new StringBuffer();
+		ret.append("<Hole>");
+		if(!isEmpty()) {
+			ret.append(contains.toString());
+		}
+		ret.append("</Hole>");
+		return ret.toString();
+	}
+
 
 }

@@ -7,7 +7,7 @@ package GameInternal;
 public abstract class GamePiece{
     protected boolean movable = false;
     public abstract boolean canBeJumped();
-        
+    public abstract String toString();
     public boolean canBeMoved() {return movable;}
     public GamePiece() {}   
 }
