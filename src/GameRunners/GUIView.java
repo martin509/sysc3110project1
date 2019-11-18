@@ -1,6 +1,7 @@
 package GameRunners;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionListener;
@@ -9,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import GameInternal.ContainerPiece;
 import GameInternal.Fox;
@@ -26,6 +28,9 @@ public class GUIView extends JFrame {
 	private JButton btnCancel;
 	private JPanel grid, gameStatus, options;
 	private JLabel txtStatus;
+	
+	//non jframe varibles
+	private boolean gameWon = false;
 
 	public final static int FRAME_WIDTH = 400, FRAME_HEIGHT = 400; // The frame sizes.
 
@@ -71,9 +76,12 @@ public class GUIView extends JFrame {
 			for (int x = 0; x < width; x++) {
 				buttons[x][y] = new JButton();
 				buttons[x][y].addActionListener(listenGridButton);
+				buttons[x][y].setBackground(new Color(0x009900));
 				grid.add(buttons[x][y]);
 			}
 		}
+		
+		
 
 		updateFrame();
 	}
@@ -87,21 +95,34 @@ public class GUIView extends JFrame {
 	public void updateBoard(Game board, boolean isPieceSel) {
 		if (board == null)
 			throw new NullPointerException();
+		
+		if(board.isGameWon()) {
+			gameWon = true;
+		} else {
+			gameWon = false;
+		}
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				
-				if(isPieceSel) {
+				// this sets the buttons for the 3 game states, Game won, piece selected, piece not selected
+				if(gameWon) {
+					buttons[x][y].setEnabled(false);
+					
+					txtStatus.setText("You win, you beat the level.");
+				} else if(isPieceSel) {
 					buttons[x][y].setEnabled(true);
+					txtStatus.setText("Now select a position for the piece to move.");
+					
 				} else {
 					buttons[x][y].setEnabled(board.getPieceAt(new Point(x,y))!= null);
+					txtStatus.setText("Select a Fox or a Rabbit.");
 				}
 				
 
 				if (board.getPieceAt(new Point(x,y)) != null) { // Update the display of each grid for what piece it should be.
-					if (board.getPieceAt(new Point(x,y)) instanceof Fox) {
-						buttons[x][y].setText("F");
-					} else if (board.getPieceAt(new Point(x,y)) instanceof FoxBit) {
+			
+					if (board.getPieceAt(new Point(x,y)) instanceof FoxBit) {
 						buttons[x][y].setText("FBit");
 					} else if (board.getPieceAt(new Point(x,y)) instanceof Mushroom) {
 						buttons[x][y].setText("M");
@@ -132,9 +153,9 @@ public class GUIView extends JFrame {
 							}
 						}
 						
-					} else {
-						buttons[x][y].setText("");
-					}
+					} 
+				} else {
+					buttons[x][y].setText("");
 				}
 			}
 		}

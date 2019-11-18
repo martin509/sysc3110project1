@@ -213,7 +213,9 @@ public class Board extends Observable {
 				if (getPieceAt(destination) instanceof ContainerPiece) {
 					ContainerPiece container = (ContainerPiece) getPieceAt(destination);
 					if (container.putIn(rabbit)) {// try adding the rabbit to the hole.
-						rabbit.jumpInHole();
+						if(container instanceof Hole) {
+							rabbit.jumpInHole();
+						}
 					}
 				} else {
 					board[destination.y][destination.x] = rabbit;// add the rabbit to the empty space.
