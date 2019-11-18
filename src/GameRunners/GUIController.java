@@ -54,7 +54,7 @@ public class GUIController {
 		this.theView = theView;
 		this.theView.newBoard(x, y, new GridListener());
 		this.theView.addCancelListener(new CancelListener());
-		this.theModel = new Game ();
+		this.theModel = new Game (5,5);
 		
 		
 		// non model/view stuff
@@ -92,7 +92,7 @@ public class GUIController {
 
 				if(theModel.getPieceAt(pieceToMove) instanceof FoxBit) {
 					
-					if(theModel.move(tempFox, endLocation)) {
+					if(theModel.move(tempFox, pieceToMove, endLocation)) {
 						tempFox = null;
 						canMove = true;
 					} else {
@@ -100,7 +100,7 @@ public class GUIController {
 					}
 				} else {
 					
-					if(theModel.move((MovablePiece)theModel.getPieceAtAdvanced(pieceToMove), endLocation)) {
+					if(theModel.move((MovablePiece)theModel.getPieceAtAdvanced(pieceToMove), pieceToMove, endLocation)) {
 						canMove = true;
 					} else {
 						canMove = false;
