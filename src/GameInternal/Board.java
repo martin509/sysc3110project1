@@ -75,6 +75,28 @@ public class Board extends Observable {
 			return board[p.y][p.x];
 		}
 	}
+	
+	/**
+	 * Method getPieceAtAdvanced returns the piece at the specific grid coordinate, if the piece is a container
+	 * it returns what is inside the container.
+	 * 
+	 * @param x int for x coordinate on the grid.
+	 * @param y int for y coordinate on the grid.
+	 * @return GamePiece at the specified grid coordinate, if the piece is a container
+	 * it returns what is inside, null if no piece exists
+	 *         there.
+	 */
+	public GamePiece getPieceAtAdvanced(Point p) {
+		if (!checkOnBoard(p)) {// check if coordinates are on the board.
+			return null;
+		} else {
+			if(board[p.y][p.x] instanceof ContainerPiece) {
+				return ((ContainerPiece)board[p.y][p.x]).check();
+			} else {
+				return board[p.y][p.x];
+			}
+		}
+	}
 
 	/**
 	 * Method addPiece adds a piece to a specific location on the board.

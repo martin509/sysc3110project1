@@ -79,33 +79,61 @@ public class GUIView extends JFrame {
 	}
 
 	/**
-	 * @author Michael Update the display of the board.
-	 * @param board
+	 * @author Michael, Andrew
+	 *  Update the display of the board this happens when a piece is selected or moved.
+	 * @param board, the game board
+	 * @param isPieceSel, is their currently a gamepiece selected
 	 */
-	public void updateBoard(Game board) {
+	public void updateBoard(Game board, boolean isPieceSel) {
 		if (board == null)
 			throw new NullPointerException();
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				buttons[x][y].setEnabled(board.getPieceAt(new Point(x,y))!= null);
+				
+				if(isPieceSel) {
+					buttons[x][y].setEnabled(true);
+				} else {
+					buttons[x][y].setEnabled(board.getPieceAt(new Point(x,y))!= null);
+				}
+				
 
 				if (board.getPieceAt(new Point(x,y)) != null) { // Update the display of each grid for what piece it should be.
-					if (board.getPieceAt(new Point(x,y)) instanceof FoxBit) {
-						buttons[x][y].setText("FBit");
-					} else if (board.getPieceAt(new Point(x,y)) instanceof Fox) {
+					if (board.getPieceAt(new Point(x,y)) instanceof Fox) {
 						buttons[x][y].setText("F");
-					} else if (board.getPieceAt(new Point(x,y)) instanceof ContainerPiece) {
-						// For holes, have a separate display for empty and full holes.
-						if (((ContainerPiece) board.getPieceAt(new Point(x,y))).isEmpty()) {
-							buttons[x][y].setText("( )");
-						} else {
-							buttons[x][y].setText("(O)");
-						}
+					} else if (board.getPieceAt(new Point(x,y)) instanceof FoxBit) {
+						buttons[x][y].setText("FBit");
 					} else if (board.getPieceAt(new Point(x,y)) instanceof Mushroom) {
 						buttons[x][y].setText("M");
 					} else if (board.getPieceAt(new Point(x,y)) instanceof Rabbit) {
 						buttons[x][y].setText("R");
+					} else if (board.getPieceAt(new Point(x,y)) instanceof ContainerPiece) {
+						// For holes and Hills, have a separate display for empty and full holes, if full what is inside.
+						if((board.getPieceAt(new Point(x,y)) instanceof Hole)) {
+							if (((ContainerPiece) board.getPieceAt(new Point(x,y))).isEmpty()) {
+								buttons[x][y].setText("HO( )");
+							} else {
+								if(((ContainerPiece)board.getPieceAt(new Point(x,y))).check() instanceof Rabbit) {
+									buttons[x][y].setText("HO(R)");
+								} else if (((ContainerPiece)board.getPieceAt(new Point(x,y))).check() instanceof Mushroom) {
+									buttons[x][y].setText("HO(M)");
+								}
+							}
+						}
+						else if((board.getPieceAt(new Point(x,y)) instanceof Hill)) {
+							if (((ContainerPiece) board.getPieceAt(new Point(x,y))).isEmpty()) {
+								buttons[x][y].setText("HI( )");
+							} else {
+								if(((ContainerPiece) board.getPieceAt(new Point(x,y))).check() instanceof Rabbit) {
+									buttons[x][y].setText("HI(R)");
+								} else if (((ContainerPiece) board.getPieceAt(new Point(x,y))).check() instanceof Mushroom) {
+									buttons[x][y].setText("HI(M)");
+								}
+							}
+						}
+						
+					} else {
+						buttons[x][y].setText("");
 					}
 				}
 			}
