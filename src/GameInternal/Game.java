@@ -223,4 +223,21 @@ public class Game extends Board implements Observer {
 		}
 		return ret;
 	}
+	
+	public boolean equals(Game game) {
+		if(game.getBoardHeight() != this.getBoardHeight() || game.getBoardWidth() != this.getBoardWidth()) {
+			return false;
+		}
+		Point point = new Point(0,0);
+		for(int y = 0; y < boardHeight; y++ ) {
+			for(int x = 0; x < boardWidth; x++) {
+				point.x=x;
+				point.y=y;
+				if(!this.getPieceAt(point).equals(game.getPieceAt(point))) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 }

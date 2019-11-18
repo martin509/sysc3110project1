@@ -33,6 +33,7 @@ public class TextGame {
 		//Command cmd = new Command(game);
 		//System.out.println(boardToText(cmd.execute()));
 	}
+	
 	/**
 	 * Returns the board in text form.
 	 * @param board
