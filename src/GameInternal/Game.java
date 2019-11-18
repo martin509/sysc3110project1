@@ -120,9 +120,6 @@ public class Game extends Board implements Observer {
 		return !redoStack.isEmpty();
 	}
 
-	/**
-	 * @author Martin
-	 */
 	public void undo() {
 		if (canUndo()) {
 			MoveEvent e = undoStack.pop();
