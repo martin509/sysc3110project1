@@ -51,7 +51,8 @@ public class GUIView extends JFrame {
 		btnCancel.setEnabled(false);
 		options.add(btnCancel);
 		add(options, BorderLayout.SOUTH);
-
+		
+		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 		updateFrame();
 	}
 
@@ -80,8 +81,6 @@ public class GUIView extends JFrame {
 				grid.add(buttons[x][y]);
 			}
 		}
-		
-		
 
 		updateFrame();
 	}
