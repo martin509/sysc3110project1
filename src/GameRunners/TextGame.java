@@ -17,7 +17,6 @@ public class TextGame {
 		Game g1 = new Game(5,5);
 		System.out.println(g1.toString() + "\n\n");
 		ArrayList<Game> game = new ArrayList<Game>();
-		game.add(g1);
 		System.out.println(g1.containsWinningLeaf(game,g1) + "\n\n");
 		System.out.println(g1.getHint().toString() + "\n\n");
 
@@ -34,6 +33,7 @@ public class TextGame {
 		//Command cmd = new Command(game);
 		//System.out.println(boardToText(cmd.execute()));
 	}
+	
 	/**
 	 * Returns the board in text form.
 	 * @param board

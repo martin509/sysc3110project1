@@ -36,7 +36,7 @@ public class Board extends Observable {
 	 * @return int for the coordinate of the piece or -1 if no piece is found.
 	 */
 	protected Point getLocation(GamePiece piece) {
-		Point point = new Point(0,0);
+		Point point = new Point(0, 0);
 		for (int i = 0; i < boardHeight; i++) {
 			for (int j = 0; j < boardWidth; j++) {// iterate through the board.
 				point.x = j;
@@ -76,6 +76,28 @@ public class Board extends Observable {
 			return null;
 		} else {
 			return board[p.y][p.x];
+		}
+	}
+	
+	/**
+	 * Method getPieceAtAdvanced returns the piece at the specific grid coordinate, if the piece is a container
+	 * it returns what is inside the container.
+	 * 
+	 * @param x int for x coordinate on the grid.
+	 * @param y int for y coordinate on the grid.
+	 * @return GamePiece at the specified grid coordinate, if the piece is a container
+	 * it returns what is inside, null if no piece exists
+	 *         there.
+	 */
+	public GamePiece getPieceAtAdvanced(Point p) {
+		if (!checkOnBoard(p)) {// check if coordinates are on the board.
+			return null;
+		} else {
+			if(board[p.y][p.x] instanceof ContainerPiece) {
+				return ((ContainerPiece)board[p.y][p.x]).check();
+			} else {
+				return board[p.y][p.x];
+			}
 		}
 	}
 
@@ -167,9 +189,9 @@ public class Board extends Observable {
 			return false;// If it is null it cannot be moved.
 		}
 		Point source;
-		if (getLocation(piece) == null){
+		if (getLocation(piece) == null) {
 			source = start;
-		} else if(!getLocation(piece).equals(start)) {
+		} else if (!getLocation(piece).equals(start)) {
 			return false;
 		} else {
 			source = getLocation(piece);
@@ -191,7 +213,9 @@ public class Board extends Observable {
 				if (getPieceAt(destination) instanceof ContainerPiece) {
 					ContainerPiece container = (ContainerPiece) getPieceAt(destination);
 					if (container.putIn(rabbit)) {// try adding the rabbit to the hole.
-						rabbit.jumpInHole();
+						if(container instanceof Hole) {
+							rabbit.jumpInHole();
+						}
 					}
 				} else {
 					board[destination.y][destination.x] = rabbit;// add the rabbit to the empty space.
@@ -203,26 +227,28 @@ public class Board extends Observable {
 			} else {
 				return false;
 			}
-		
+
 		} else if (piece instanceof Fox) {// if the piece being moved is a fox.
 			Fox fox = (Fox) piece;// cast the piece to a fox for less code repetition.
 			if (fox.getHead() != null) {// check the fox has FoxBits.
 				Point oldLoc;
-				if(direction == fox.getAxisForward()) {
+				if (direction == fox.getAxisForward()) {
 					oldLoc = getLocation(fox.getHead());
-				} else if (direction == fox.getAxisBackward()){
+				} else if (direction == fox.getAxisBackward()) {
 					oldLoc = getLocation(fox.getHead().getTail());
 				} else {
 					return false;
 				}
 				int count = getNumSpacesFromPoint(oldLoc, destination);
-				if(isMoveValid(fox,oldLoc,destination)) {
+				if (isMoveValid(fox, oldLoc, destination)) {
 					FoxBit tempBehind;
 					if (direction == fox.getAxisForward()) {// if the fox is moving forward
-						board[destination.y][destination.x] = fox.getHead();// set the final destination cell to the head
+						board[destination.y][destination.x] = fox.getHead();// set the final destination cell to the
+																			// head
 						tempBehind = fox.getHead().getBehind();// set the temp behind to be the neck
 					} else {// if the fox is moving backwards
-						board[destination.y][destination.x] = fox.getHead().getTail();// set the destination cell to the tail.
+						board[destination.y][destination.x] = fox.getHead().getTail();// set the destination cell to the
+																						// tail.
 						tempBehind = fox.getHead().getTail().getAhead();// set the temp behind to be the butt.
 					}
 					removePieceAt(oldLoc);// remove the tail or the head from the old position
@@ -364,7 +390,7 @@ public class Board extends Observable {
 	}
 
 	protected boolean isMoveValid(MovablePiece piece, Point source, Point destination) {
-		if(source == null || destination == null || source.equals(destination)) {
+		if (source == null || destination == null || source.equals(destination)) {
 			return false;
 		}
 		DIRECTION direction = getDirectionFromPoint(source, destination);// Get the direction of the movement to happen.
@@ -374,31 +400,29 @@ public class Board extends Observable {
 		}
 		if (piece.getClass() == Rabbit.class) {
 			// cannot jump to an immediately adjacent empty space or out of a hole.
-			if (inFront == null || getPieceAt(source) instanceof Hole) {
+			if (inFront == null || !getPieceAt(source).canBeJumped()) {
 				return false;
 			} else {// if not beside an empty space or in a hole.
-				if (inFront instanceof ContainerPiece) {// Check if inFront is a ContainerPiece
-					if (((ContainerPiece) inFront).isEmpty()) {
-						return false;// If it is and it is empty return false.
-					}
-				}
 				// keep track of the current coordinates of the adjacent rabbit.
 				Point newLoc = getAdjacentCoordinate(source, direction);
 				// iterate through the adjacent pieces until an empty space is reached, or
 				// the rabbit being checked is off the board, or the rabbit cannot be jumped.
-				while (checkOnBoard(newLoc) && inFront != null && inFront.canBeJumped() && !newLoc.equals(destination)) {
+				while (checkOnBoard(newLoc) && inFront != null && inFront.canBeJumped()
+						&& !newLoc.equals(destination)) {
 					newLoc = getAdjacentCoordinate(newLoc, direction);
 					inFront = getPieceAt(newLoc);
 				}
 				if (!checkOnBoard(newLoc)) {// if the rabbit being check is off the board
 					return false;
-				} else if (inFront == null && checkOnBoard(newLoc)) {// if the space is empty
-					return true;
-				} else if (!inFront.canBeJumped()) {// if the rabbit being checked cannot be jumped.
-					if (inFront instanceof ContainerPiece) {// check if the rabbit is a container
-						ContainerPiece container = (ContainerPiece) inFront;
-						if (container.isEmpty()) {// try adding the rabbit to the hole.
-							return true;
+				} else if (newLoc.equals(destination)) {
+					if (inFront == null && checkOnBoard(newLoc)) {// if the space is empty
+						return true;
+					} else if (!inFront.canBeJumped()) {// if the rabbit being checked cannot be jumped.
+						if (inFront instanceof ContainerPiece) {// check if the rabbit is a container
+							ContainerPiece container = (ContainerPiece) inFront;
+							if (container.isEmpty()) {// try adding the rabbit to the hole.
+								return true;
+							}
 						}
 					}
 				}
@@ -437,9 +461,10 @@ public class Board extends Observable {
 		}
 		return false;
 	}
+
 	public String toString() {
 		StringBuffer ret = new StringBuffer();
-		Point point = new Point(0,0);
+		Point point = new Point(0, 0);
 		ret.append("<Board boardWidth=" + boardWidth + ", boardHeight=" + boardHeight + ">\n");
 		for (int i = 0; i < boardHeight; i++) {
 			for (int j = 0; j < boardWidth; j++) {// iterate through the board.

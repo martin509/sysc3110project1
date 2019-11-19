@@ -4,9 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Scanner;
 import java.util.Stack;
-import java.util.concurrent.*;
 
 public class Game extends Board implements Observer {
 
@@ -44,12 +42,10 @@ public class Game extends Board implements Observer {
 	}
 
 	private void initialiseGame() {
-		GamePiece[] pieces = { new Hill(), new Hill(), new Hill(), new Hill(), new Hole(), new Hole(), new Hole(),
-				new Hole(), new Hole(), new Rabbit(), new Rabbit(), new Rabbit(), new Mushroom(), new Mushroom(),
+		GamePiece[] pieces = { new Hill(), new Hill(), new Hill(), new Hill(), new Hole(), new Hole(), new Hole(), new Hole(), new Hole(), new Rabbit(), new Rabbit(), new Rabbit(), new Mushroom(), new Mushroom(),
 				new Fox(2, DIRECTION.SOUTH), new Fox(2, DIRECTION.NORTH) };
-		Point[] locations = { new Point(0, 2), new Point(2, 0), new Point(2, 4), new Point(4, 2), new Point(0, 0),
-				new Point(4, 0), new Point(2, 2), new Point(0, 4), new Point(4, 4), new Point(0, 2), new Point(2, 2),
-				new Point(2, 4), new Point(0, 3), new Point(2, 0), new Point(1, 2), new Point(3, 3) };
+		Point[] locations = { new Point(0, 2), new Point(2, 0), new Point(2, 4), new Point(4, 2), new Point(0, 0), new Point(4, 0), new Point(2, 2), new Point(0, 4), new Point(4, 4), new Point(0, 2), new Point(2, 2), new Point(2, 4),
+				new Point(0, 3), new Point(2, 0), new Point(1, 2), new Point(3, 3) };
 		for (int i = 0; i < pieces.length; i++) {
 			addPiece(locations[i], pieces[i]);
 		}
@@ -67,7 +63,7 @@ public class Game extends Board implements Observer {
 			return null;
 		}
 		ArrayList<GamePiece> pieces = new ArrayList<GamePiece>();
-		Point p = new Point(0,0);
+		Point p = new Point(0, 0);
 		for (int i = 0; i < boardHeight; i++) {
 			for (int j = 0; j < boardWidth; j++) {// iterate through board
 				p.y = i;
@@ -83,9 +79,9 @@ public class Game extends Board implements Observer {
 								pieces.add(cont.check());// add to the array if it matches the class
 							}
 						}
-					} else if((c.equals(MovablePiece.class) || c.equals(GamePiece.class)) && getPieceAt(p) instanceof FoxBit) {
-						Fox fox = ((FoxBit)getPieceAt(p)).getFox();
-						if(!pieces.contains(fox)) {
+					} else if ((c.equals(MovablePiece.class) || c.equals(GamePiece.class)) && getPieceAt(p) instanceof FoxBit) {
+						Fox fox = ((FoxBit) getPieceAt(p)).getFox();
+						if (!pieces.contains(fox)) {
 							pieces.add(fox);
 						}
 					}
@@ -103,10 +99,32 @@ public class Game extends Board implements Observer {
 	}
 
 	/**
+	 * Used to determine if the user can use the Undo feature (ie, determine if the
+	 * button is disabled or not).
+	 * 
+	 * @author Martin
+	 * @return Whether there are moves that can be undone.
+	 */
+	public boolean canUndo() {
+		return !undoStack.isEmpty();
+	}
+
+	/**
+	 * Used to determine if the user can use the Redo feature (ie, determine if the
+	 * button is disabled or not).
+	 * 
+	 * @author Martin
+	 * @return Whether there are moves that can be redone.
+	 */
+	public boolean canRedo() {
+		return !redoStack.isEmpty();
+	}
+
+	/**
 	 * 
 	 */
 	public void undo() {
-		if (!undoStack.isEmpty()) {
+		if (canUndo()) {
 			MoveEvent e = undoStack.pop();
 			GamePiece dest = getPieceAt(e.getDestinationLocation());
 			if (dest instanceof ContainerPiece) {
@@ -133,7 +151,7 @@ public class Game extends Board implements Observer {
 	 * 
 	 */
 	public void redo() {
-		if (!redoStack.isEmpty()) {
+		if (canRedo()) {
 			MoveEvent e = redoStack.pop();
 			move(e.getPiece(), e.getSourceLocation(), e.getDestinationLocation());
 			undoStack.push(e);
@@ -172,44 +190,46 @@ public class Game extends Board implements Observer {
 			return moves;
 		}
 	}
-	
+
 	public MoveEvent getHint() {
-		if(isGameWon()) {
+		if (isGameWon()) {
 			return null;
 		}
 		ArrayList<MoveEvent> currentPossibleMoves = getAllValidPieceMoves();
 		ArrayList<Game> gameStatesChecked = new ArrayList<Game>();
 		gameStatesChecked.add(this);
-		for(MoveEvent e:currentPossibleMoves) {
+		for (MoveEvent e : currentPossibleMoves) {
 			Game futureGame = copyGame(this);
 			futureGame.move(e.getPiece(), e.getSourceLocation(), e.getDestinationLocation());
-			if(containsWinningLeaf(gameStatesChecked,futureGame)) {
+			if (containsWinningLeaf(gameStatesChecked, futureGame)) {
 				return e;
 			}
 		}
 		return null;
 	}
+
 	public boolean containsWinningLeaf(ArrayList<Game> gameStatesChecked, Game g) {
-		if(g.isGameWon()) {
+		if (g.isGameWon()) {
 			return true;
-		} else if(gameStatesChecked.contains(g)) {
+		} else if (gameStatesChecked.contains(g)) {
 			return false;
 		} else {
 			ArrayList<MoveEvent> currentPossibleMoves = getAllValidPieceMoves();
-			for(MoveEvent e:currentPossibleMoves) {
+			for (MoveEvent e : currentPossibleMoves) {
 				Game futureGame = copyGame(g);
 				futureGame.move(e.getPiece(), e.getSourceLocation(), e.getDestinationLocation());
 				gameStatesChecked.add(futureGame);
-				if(containsWinningLeaf(gameStatesChecked, futureGame)) {
+				if (containsWinningLeaf(gameStatesChecked, futureGame)) {
 					return true;
 				}
 			}
 			return false;
 		}
 	}
+
 	public static Game copyGame(Game game) {
-		Game ret = new Game(game.getBoardWidth(),game.getBoardHeight());
-		Point p = new Point(0,0);
+		Game ret = new Game(game.getBoardWidth(), game.getBoardHeight());
+		Point p = new Point(0, 0);
 		for (int i = 0; i < game.getBoardHeight(); i++) {
 			for (int j = 0; j < game.getBoardWidth(); j++) {// iterate through board
 				p.y = i;
@@ -222,5 +242,22 @@ public class Game extends Board implements Observer {
 			}
 		}
 		return ret;
+	}
+
+	public boolean equals(Game game) {
+		if (game.getBoardHeight() != this.getBoardHeight() || game.getBoardWidth() != this.getBoardWidth()) {
+			return false;
+		}
+		Point point = new Point(0, 0);
+		for (int y = 0; y < boardHeight; y++) {
+			for (int x = 0; x < boardWidth; x++) {
+				point.x = x;
+				point.y = y;
+				if (!this.getPieceAt(point).equals(game.getPieceAt(point))) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }
